@@ -51,7 +51,7 @@
             <p class="service-time smaller">18:00</p>
             <p>Aanddiens</p>
           </div>
-          <p class="muted">Diens-tye, kontakbesonderhede en aannames kan uit die Google Drive JSON gelees word.</p>
+          <p class="muted">Diens-tye, kontakbesonderhede en aannames word uit die Google Drive JSON gelees.</p>
         </aside>
       </section>
 
@@ -76,14 +76,14 @@
         <div class="section-heading">
           <p class="eyebrow">Preke en uitsendings</p>
           <h2 id="sermons-heading">YouTube preke</h2>
-          <p>As ons die channel ID kry, kan ons die kanaal se uploads embed sonder 'n API sleutel. Tot dan bly die YouTube streams-skakel beskikbaar.</p>
+          <p>Die kanaal se uploads word embed met die channel ID, sonder 'n API sleutel.</p>
         </div>
 
         <div class="embed-shell video-shell has-embed" id="youtube-embed-shell">
           <iframe id="youtube-frame" title="YouTube preke van Gereformeerde Kerk Gobabis" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
           <div class="placeholder" id="youtube-placeholder">
-            <h3>YouTube embed wag vir channel ID</h3>
-            <p>Kry die channel ID in YouTube Studio of via die kanaal se page source, dan wys die uploads hier.</p>
+            <h3>YouTube embed kan nog nie vertoon word nie</h3>
+            <p>Maak seker die channel ID is korrek of vul 'n volledige YouTube embed URL in die Google Drive JSON in.</p>
           </div>
         </div>
 
@@ -91,7 +91,7 @@
           <div>
             <p class="eyebrow">YouTube</p>
             <h3>GK Gobabis streams</h3>
-            <p>Direkte skakel na die jongste en vorige regstreekse uitsendings indien die embed nog nie gevul is nie.</p>
+            <p>Direkte skakel na die jongste en vorige regstreekse uitsendings indien die embed nie laai nie.</p>
           </div>
           <a class="button primary" id="youtube-streams-link" href="#" target="_blank" rel="noopener">Maak YouTube streams oop</a>
         </div>
@@ -116,7 +116,7 @@
         <div>
           <p class="eyebrow">Kontak</p>
           <h2>Kontak en ligging</h2>
-          <p>Facebook en Google word vir nou geskakel. Later kan ons bevestigde adres, telefoon en e-pos in die Google Drive JSON hou.</p>
+          <p>Facebook en Google word geskakel. Die bevestigde adres, telefoon en e-pos hoort in die Google Drive JSON.</p>
           <div class="social-links">
             <a class="button secondary" id="facebook-link" href="#" target="_blank" rel="noopener">Facebook</a>
             <a class="button secondary" id="google-business-link" href="#" target="_blank" rel="noopener">Google profiel</a>
@@ -129,6 +129,21 @@
           <p><strong>E-pos:</strong> <span data-field="church.email">Nog te bevestig</span></p>
           <p><strong>Adres:</strong> <span data-field="church.address">Nog te bevestig</span></p>
           <p><strong>Ligging:</strong> <span data-field="church.location">Gobabis, Namibie</span></p>
+        </div>
+      </section>
+
+      <section class="section" id="kaart" aria-labelledby="map-heading">
+        <div class="section-heading">
+          <p class="eyebrow">Kaart</p>
+          <h2 id="map-heading">Waar om ons te kry</h2>
+          <p>Die kaart gebruik 'n gewone Google Maps embed sonder API sleutel.</p>
+        </div>
+        <div class="embed-shell map-shell">
+          <iframe id="map-frame" title="Google Maps kaart vir Gereformeerde Kerk Gobabis" loading="lazy"></iframe>
+          <div class="placeholder" id="map-placeholder">
+            <h3>Kaart kan nog nie vertoon word nie</h3>
+            <p>Vul 'n mapsEmbed skakel in die Google Drive JSON, of gebruik die standaard soekkaart vir Gereformeerde Kerk Gobabis.</p>
+          </div>
         </div>
       </section>
     </main>
