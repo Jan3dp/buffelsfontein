@@ -12,26 +12,17 @@
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at top left, rgba(185, 132, 69, 0.16), transparent 32rem),
-    var(--background);
+  background: radial-gradient(circle at top left, rgba(185, 132, 69, 0.16), transparent 32rem), var(--background);
   color: var(--text);
   line-height: 1.6;
 }
 
-a {
-  color: inherit;
-}
+a { color: inherit; }
 
 code {
   background: rgba(92, 61, 46, 0.1);
@@ -77,14 +68,8 @@ code {
   letter-spacing: 0.04em;
 }
 
-.brand strong,
-.brand small {
-  display: block;
-}
-
-.brand small {
-  color: var(--muted);
-}
+.brand strong, .brand small { display: block; }
+.brand small { color: var(--muted); }
 
 .nav-links {
   display: flex;
@@ -98,9 +83,7 @@ code {
   text-decoration: none;
 }
 
-.nav-links a:hover {
-  color: var(--brand);
-}
+.nav-links a:hover { color: var(--brand); }
 
 .menu-button {
   display: none;
@@ -155,7 +138,7 @@ code {
   text-transform: uppercase;
 }
 
-.hero-actions {
+.hero-actions, .social-links {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
@@ -174,16 +157,8 @@ code {
   white-space: nowrap;
 }
 
-.button.primary {
-  background: var(--brand);
-  color: white;
-}
-
-.button.secondary {
-  border: 1px solid var(--line);
-  background: var(--surface);
-  color: var(--brand);
-}
+.button.primary { background: var(--brand); color: white; }
+.button.secondary { border: 1px solid var(--line); background: var(--surface); color: var(--brand); }
 
 .text-link {
   display: inline-flex;
@@ -192,9 +167,7 @@ code {
   font-weight: 800;
 }
 
-.hero-card,
-.contact-card,
-.sermon-card {
+.hero-card, .contact-card, .sermon-card, .newsletter-card {
   border: 1px solid var(--line);
   border-radius: 1.5rem;
   background: rgba(255, 250, 242, 0.88);
@@ -202,9 +175,7 @@ code {
   padding: 1.5rem;
 }
 
-.hero-card h2,
-.section-heading h2,
-.split h2 {
+.hero-card h2, .section-heading h2, .split h2 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
   color: var(--brand-dark);
@@ -212,25 +183,25 @@ code {
   line-height: 1.05;
 }
 
+.service-list {
+  display: grid;
+  gap: 0.25rem;
+  margin: 1rem 0;
+}
+
 .service-time {
   color: var(--brand);
-  font-size: 2.8rem;
+  font-size: 2.65rem;
   font-weight: 900;
   line-height: 1;
-  margin: 1rem 0 0.4rem;
+  margin: 0.8rem 0 0.1rem;
 }
 
-.muted {
-  color: var(--muted);
-}
+.service-time.smaller { font-size: 2rem; }
+.muted { color: var(--muted); }
 
-.section-heading {
-  max-width: 760px;
-}
-
-.section-heading p:last-child {
-  color: var(--muted);
-}
+.section-heading { max-width: 760px; }
+.section-heading p:last-child { color: var(--muted); }
 
 .content-layout {
   display: grid;
@@ -240,10 +211,7 @@ code {
   padding-top: 2rem;
 }
 
-.sticky-note {
-  position: sticky;
-  top: 6rem;
-}
+.sticky-note { position: sticky; top: 6rem; }
 
 .embed-shell {
   position: relative;
@@ -260,28 +228,17 @@ code {
   border: 0;
 }
 
-.doc-shell {
-  min-height: 860px;
-}
-
-.doc-shell iframe {
-  height: 860px;
-}
+.doc-shell { min-height: 860px; }
+.doc-shell iframe { height: 860px; }
 
 .video-shell {
-  display: none;
+  display: block;
   min-height: auto;
   margin-top: 1.2rem;
   aspect-ratio: 16 / 9;
 }
 
-.video-shell.has-embed {
-  display: block;
-}
-
-.video-shell iframe {
-  height: 100%;
-}
+.video-shell iframe { height: 100%; }
 
 .placeholder {
   min-height: inherit;
@@ -291,20 +248,11 @@ code {
   text-align: center;
 }
 
-.placeholder h3 {
-  margin-bottom: 0.25rem;
-  color: var(--brand-dark);
-}
+.inline-placeholder { min-height: auto; }
+.placeholder h3 { margin-bottom: 0.25rem; color: var(--brand-dark); }
+.placeholder p { max-width: 520px; margin: 0 auto; color: var(--muted); }
 
-.placeholder p {
-  max-width: 520px;
-  margin: 0 auto;
-  color: var(--muted);
-}
-
-.sermon-layout {
-  padding-top: 3rem;
-}
+.sermon-layout { padding-top: 3rem; }
 
 .sermon-card {
   display: flex;
@@ -314,17 +262,37 @@ code {
   margin-top: 1.25rem;
 }
 
-.sermon-card h3 {
+.sermon-card h3, .newsletter-card h3 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: clamp(1.35rem, 3vw, 2rem);
   color: var(--brand-dark);
 }
 
-.sermon-card p:last-child {
+.sermon-card p:last-child, .newsletter-card p:last-child {
   max-width: 720px;
   margin-bottom: 0;
   color: var(--muted);
+}
+
+.newsletter-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.newsletter-date {
+  color: var(--accent);
+  font-weight: 800;
+  margin: 0 0 0.35rem;
+}
+
+.newsletter-card a {
+  display: inline-flex;
+  margin-top: 1rem;
+  color: var(--brand);
+  font-weight: 800;
 }
 
 .split {
@@ -334,17 +302,9 @@ code {
   gap: 2rem;
 }
 
-.split p {
-  color: var(--muted);
-}
-
-.contact-card p {
-  margin: 0 0 0.7rem;
-}
-
-.contact-card p:last-child {
-  margin-bottom: 0;
-}
+.split p { color: var(--muted); }
+.contact-card p { margin: 0 0 0.7rem; }
+.contact-card p:last-child { margin-bottom: 0; }
 
 .site-footer {
   border-top: 1px solid var(--line);
@@ -353,19 +313,11 @@ code {
   color: var(--muted);
 }
 
-.site-footer p {
-  margin: 0.2rem 0;
-}
+.site-footer p { margin: 0.2rem 0; }
 
 @media (max-width: 900px) {
-  .menu-button {
-    display: inline-flex;
-  }
-
-  .nav {
-    align-items: flex-start;
-  }
-
+  .menu-button { display: inline-flex; }
+  .nav { align-items: flex-start; }
   .nav-links {
     position: absolute;
     inset: 100% 1rem auto 1rem;
@@ -378,48 +330,16 @@ code {
     padding: 0.8rem;
     box-shadow: var(--shadow);
   }
-
-  .nav-links.is-open {
-    display: flex;
-  }
-
-  .nav-links a {
-    padding: 0.55rem 0.4rem;
-  }
-
-  .hero,
-  .content-layout,
-  .split {
-    grid-template-columns: 1fr;
-  }
-
-  .sticky-note {
-    position: static;
-  }
-
-  .sermon-card {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .doc-shell,
-  .doc-shell iframe {
-    min-height: 720px;
-    height: 720px;
-  }
+  .nav-links.is-open { display: flex; }
+  .nav-links a { padding: 0.55rem 0.4rem; }
+  .hero, .content-layout, .split { grid-template-columns: 1fr; }
+  .sticky-note { position: static; }
+  .sermon-card { align-items: stretch; flex-direction: column; }
+  .doc-shell, .doc-shell iframe { min-height: 720px; height: 720px; }
 }
 
 @media (max-width: 520px) {
-  .brand small {
-    display: none;
-  }
-
-  .section {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .button {
-    width: 100%;
-  }
+  .brand small { display: none; }
+  .section { padding-left: 1rem; padding-right: 1rem; }
+  .button { width: 100%; }
 }
