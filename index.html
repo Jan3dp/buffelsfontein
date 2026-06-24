@@ -26,9 +26,7 @@
         </button>
 
         <div class="nav-links" id="nav-links">
-          <a href="#oor-ons">Oor ons</a>
-          <a href="#geloof">Gereformeerd</a>
-          <a href="#eredienste">Eredienste</a>
+          <a href="#gemeente">Gemeente</a>
           <a href="#preke">Preke</a>
           <a href="#kontak">Kontak</a>
         </div>
@@ -36,102 +34,79 @@
     </header>
 
     <main id="top">
-      <section class="hero section">
+      <section class="hero section compact-section">
         <div class="hero-copy">
           <p class="eyebrow">Welkom</p>
           <h1>Gereformeerde Kerk Buffelsfontein</h1>
           <p class="lead">
-            ’n Gemeente wat warm saam aanbid, leef uit God se Woord, en Christus as Koning bely.
+            ’n Warm, gereformeerde gemeente waar ons saam onder God se Woord leef en Christus as Koning bely.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#eredienste">Sien eredienstye</a>
-            <a class="button secondary" href="#preke">Luister na preke</a>
+            <a class="button primary" href="#gemeente">Lees gemeente-inligting</a>
+            <a class="button secondary" href="#preke">Kyk preke en uitsendings</a>
           </div>
         </div>
-        <div class="hero-card" aria-label="Kort gemeente inligting">
-          <h2>Sondae</h2>
+
+        <aside class="hero-card" aria-label="Kort gemeente inligting">
+          <p class="eyebrow">Sondag</p>
+          <h2>Erediens</h2>
           <p class="service-time">09:00</p>
-          <p>Erediens</p>
-          <p class="muted">Bywerk hierdie tye in die Google Doc sodra die finale dokument gekoppel is.</p>
-        </div>
+          <p class="muted">
+            Finale tye, kontakbesonderhede en aankondigings word in die Google Doc bestuur.
+          </p>
+        </aside>
       </section>
 
-      <section class="section intro-grid" id="oor-ons">
-        <article class="card">
-          <p class="eyebrow">Oor ons</p>
-          <h2>’n Warm gemeente met ’n gereformeerde hart</h2>
-          <p>
-            Hierdie is die eerste weergawe van die webwerf. Die inhoud hieronder kan direk uit ’n gepubliseerde Google Doc vertoon word, sodat die gemeente se administrasie dit maklik kan bywerk sonder om kode te verander.
-          </p>
-        </article>
-
-        <article class="card" id="geloof">
-          <p class="eyebrow">Gereformeerde identiteit</p>
-          <h2>Gebou op die Woord</h2>
-          <p>
-            Ons wil duidelik wys dat die gemeente gereformeerd is: Christus sentraal, die Skrif as gesag, en ’n lewe van dankbaarheid voor die Here.
-          </p>
-        </article>
-      </section>
-
-      <section class="section" aria-labelledby="doc-heading">
-        <div class="section-heading">
+      <section class="section content-layout" id="gemeente" aria-labelledby="doc-heading">
+        <div class="section-heading sticky-note">
           <p class="eyebrow">Gemeente-inligting</p>
-          <h2 id="doc-heading">Inhoud uit Google Docs</h2>
+          <h2 id="doc-heading">Alles uit die Google Doc</h2>
           <p>
-            Sodra die Google Doc gepubliseer is, vervang ons net die plekhouer-skakel in <code>script.js</code>.
+            Hierdie deel is die hoofinhoud van die webwerf. Die admin-dame kan die Google Doc bywerk; die webwerf wys dit hier binne die raamwerk.
           </p>
+          <a class="text-link" id="google-doc-link" href="#" target="_blank" rel="noopener">
+            Maak die Google Doc oop
+          </a>
         </div>
 
-        <div class="embed-shell">
+        <div class="embed-shell doc-shell">
           <iframe
             id="google-doc-frame"
             title="Gereformeerde Kerk Buffelsfontein inligting uit Google Docs"
             loading="lazy"
           ></iframe>
           <div class="placeholder" id="google-doc-placeholder">
-            <h3>Google Doc nog nie gekoppel nie</h3>
+            <h3>Google Doc kan nog nie vertoon word nie</h3>
             <p>
-              Publiseer die Google Doc na die web en plaas die embed-skakel in <code>script.js</code>.
+              Maak seker die dokument is gedeel met “Anyone with the link can view”, of publiseer dit met “Publish to web”.
             </p>
           </div>
         </div>
       </section>
 
-      <section class="section split" id="eredienste">
-        <div>
-          <p class="eyebrow">Eredienste</p>
-          <h2>Kom aanbid saam met ons</h2>
-          <p>
-            Die finale eredienstye, kategese-inligting, Bybelstudies en ander gemeente-afsprake kan uit die Google Doc bestuur word.
-          </p>
-        </div>
-        <div class="info-list">
-          <div>
-            <strong>Sondagoggend</strong>
-            <span>09:00</span>
-          </div>
-          <div>
-            <strong>Adres</strong>
-            <span>Buffelsfontein</span>
-          </div>
-          <div>
-            <strong>Taal</strong>
-            <span>Afrikaans</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="preke" aria-labelledby="sermons-heading">
+      <section class="section sermon-layout" id="preke" aria-labelledby="sermons-heading">
         <div class="section-heading">
-          <p class="eyebrow">Preke</p>
-          <h2 id="sermons-heading">Jongste preke en uitsendings</h2>
+          <p class="eyebrow">Preke en uitsendings</p>
+          <h2 id="sermons-heading">Jongste YouTube streams</h2>
           <p>
-            Geen API-sleutel nodig nie. Ons gebruik vir eers ’n YouTube kanaal- of speellys-embed.
+            Sonder ’n API-sleutel gebruik ons vir eers ’n direkte skakel na die YouTube streams-blad. Dit is stabiel en eenvoudig.
           </p>
         </div>
 
-        <div class="embed-shell video-shell">
+        <div class="sermon-card">
+          <div>
+            <p class="eyebrow">YouTube</p>
+            <h3>GK Gobabis streams</h3>
+            <p>
+              Gaan direk na die jongste en vorige regstreekse uitsendings. Later kan ons ’n spesifieke preke-speellys embed as julle ’n playlist-ID het.
+            </p>
+          </div>
+          <a class="button primary" id="youtube-streams-link" href="#" target="_blank" rel="noopener">
+            Maak YouTube streams oop
+          </a>
+        </div>
+
+        <div class="embed-shell video-shell optional-embed" id="youtube-embed-shell">
           <iframe
             id="youtube-frame"
             title="YouTube preke van Gereformeerde Kerk Buffelsfontein"
@@ -140,9 +115,9 @@
             loading="lazy"
           ></iframe>
           <div class="placeholder" id="youtube-placeholder">
-            <h3>YouTube nog nie gekoppel nie</h3>
+            <h3>Opsionele YouTube embed</h3>
             <p>
-              Plaas die YouTube kanaal- of speellys-embed in <code>script.js</code>.
+              Hierdie blok sal outomaties verskyn wanneer ’n regte YouTube embed-URL in <code>script.js</code> ingevul word.
             </p>
           </div>
         </div>
@@ -150,23 +125,23 @@
 
       <section class="section split contact" id="kontak">
         <div>
-          <p class="eyebrow">Kontak en ligging</p>
-          <h2>Ons hoor graag van jou</h2>
+          <p class="eyebrow">Kontak</p>
+          <h2>Kontak en ligging</h2>
           <p>
-            Voeg hier later die gemeente se telefoonnommer, e-posadres, fisiese adres en Google Maps-skakel by.
+            Hou die finale kontakbesonderhede in die Google Doc, sodat die webwerf nie elke keer met kode verander hoef te word nie.
           </p>
         </div>
         <div class="contact-card">
-          <p><strong>E-pos:</strong> <a href="mailto:info@example.com">info@example.com</a></p>
-          <p><strong>Telefoon:</strong> 000 000 0000</p>
-          <p><strong>Ligging:</strong> Buffelsfontein</p>
+          <p><strong>Gemeente:</strong> Gereformeerde Kerk Buffelsfontein</p>
+          <p><strong>Taal:</strong> Afrikaans</p>
+          <p><strong>Identiteit:</strong> Gereformeerd</p>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
       <p>&copy; <span id="year"></span> Gereformeerde Kerk Buffelsfontein.</p>
-      <p>Tot eer van God alleen.</p>
+      <p>Soli Deo Gloria.</p>
     </footer>
 
     <script src="script.js"></script>
