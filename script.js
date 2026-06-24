@@ -59,6 +59,21 @@ function setContactActions(config) {
   }
 }
 
+function showDataError() {
+  document.body.classList.add("data-load-failed");
+
+  if (document.getElementById("data-alert")) return;
+
+  const alert = document.createElement("div");
+  alert.id = "data-alert";
+  alert.className = "data-alert";
+  alert.setAttribute("role", "status");
+  alert.textContent = "Die Google Drive JSON kon nie gelaai word nie. Maak seker die lêer is publiek gedeel en geldige JSON bevat.";
+
+  const main = document.querySelector("main");
+  if (main) main.prepend(alert);
+}
+
 function getGoogleDocPreviewUrl(url) {
   const match = url?.match(/\/document\/d\/([^/]+)/);
   return match ? `https://docs.google.com/document/d/${match[1]}/preview` : "";
@@ -133,7 +148,7 @@ async function setupData() {
     document.body.classList.add("data-loaded");
   } catch (error) {
     console.error("Google Drive JSON could not be loaded. Check sharing settings and JSON validity.", error);
-    document.body.classList.add("data-load-failed");
+    showDataError();
   }
 
   attachEmbed("newsletter-folder-frame", "newsletter-folder-placeholder", getDriveFolderEmbedUrl(driveConfig.newslettersFolderId));
