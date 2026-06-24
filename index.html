@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="Gereformeerde Kerk Gobabis - 'n warm, gereformeerde gemeente." />
     <title>Gereformeerde Kerk Gobabis</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -50,7 +51,7 @@
             <p class="service-time smaller">18:00</p>
             <p>Aanddiens</p>
           </div>
-          <p class="muted">Diens-tye, kontakbesonderhede en aannames kan uit <code>site-data.json</code> gelees word.</p>
+          <p class="muted">Diens-tye, kontakbesonderhede en aannames kan uit die Google Drive JSON gelees word.</p>
         </aside>
       </section>
 
@@ -75,14 +76,14 @@
         <div class="section-heading">
           <p class="eyebrow">Preke en uitsendings</p>
           <h2 id="sermons-heading">YouTube preke</h2>
-          <p>Sodra ons 'n regte playlist-embed URL het, wys die speler hier. Tot dan bly die YouTube streams-skakel beskikbaar.</p>
+          <p>As ons die channel ID kry, kan ons die kanaal se uploads embed sonder 'n API sleutel. Tot dan bly die YouTube streams-skakel beskikbaar.</p>
         </div>
 
         <div class="embed-shell video-shell has-embed" id="youtube-embed-shell">
           <iframe id="youtube-frame" title="YouTube preke van Gereformeerde Kerk Gobabis" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
           <div class="placeholder" id="youtube-placeholder">
-            <h3>YouTube embed wag vir 'n playlist</h3>
-            <p>Gee vir my 'n YouTube playlist ID of embed URL, dan wys die preke direk hier op die blad.</p>
+            <h3>YouTube embed wag vir channel ID</h3>
+            <p>Kry die channel ID in YouTube Studio of via die kanaal se page source, dan wys die uploads hier.</p>
           </div>
         </div>
 
@@ -99,11 +100,15 @@
       <section class="section" id="nuusbriewe" aria-labelledby="newsletters-heading">
         <div class="section-heading">
           <p class="eyebrow">Nuusbriewe</p>
-          <h2 id="newsletters-heading">Jongste nuusbriewe</h2>
-          <p>Die webwerf lees tans 'n eenvoudige <code>newsletters.json</code> lys. Dit is die no-API alternatief vir 'n Google Drive folder.</p>
+          <h2 id="newsletters-heading">Nuusbriewe uit Google Drive</h2>
+          <p>Hierdie deel wys die publieke Google Drive folder direk. Dit vermy 'n ekstra nuusbrief-JSON vir nou.</p>
         </div>
-        <div class="newsletter-list" id="newsletter-list">
-          <div class="placeholder inline-placeholder"><p>Nuusbriewe sal hier verskyn sodra die lys gevul is.</p></div>
+        <div class="embed-shell folder-shell">
+          <iframe id="newsletter-folder-frame" title="Nuusbriewe uit Google Drive" loading="lazy"></iframe>
+          <div class="placeholder" id="newsletter-folder-placeholder">
+            <h3>Nuusbrief-folder kan nog nie vertoon word nie</h3>
+            <p>Maak seker die Google Drive folder is publiek of gedeel met anyone with the link.</p>
+          </div>
         </div>
       </section>
 
@@ -111,7 +116,7 @@
         <div>
           <p class="eyebrow">Kontak</p>
           <h2>Kontak en ligging</h2>
-          <p>Facebook en Google word vir nou geskakel. Later kan ons bevestigde adres, telefoon en e-pos in <code>site-data.json</code> hou.</p>
+          <p>Facebook en Google word vir nou geskakel. Later kan ons bevestigde adres, telefoon en e-pos in die Google Drive JSON hou.</p>
           <div class="social-links">
             <a class="button secondary" id="facebook-link" href="#" target="_blank" rel="noopener">Facebook</a>
             <a class="button secondary" id="google-business-link" href="#" target="_blank" rel="noopener">Google profiel</a>
