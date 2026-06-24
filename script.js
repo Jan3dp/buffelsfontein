@@ -3,30 +3,11 @@ const driveConfig = {
   newslettersFolderId: "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
 };
 
-const fallbackConfig = {
-  church: {
-    name: "Gereformeerde Kerk Gobabis",
-    shortName: "GK Gobabis",
-    language: "Afrikaans",
-    identity: "Gereformeerd",
-    tagline: "'n Warm, gereformeerde gemeente waar ons saam onder God se Woord leef en Christus as Koning bely.",
-    minister: "Nog te bevestig",
-    location: "Gobabis, Namibie",
-    phone: "Nog te bevestig",
-    email: "Nog te bevestig",
-    address: "Nog te bevestig",
-  },
-  services: [
-    { name: "Oggenddiens", time: "09:30" },
-    { name: "Aanddiens", time: "18:00" },
-  ],
+const requiredDefaults = {
   links: {
-    googleDoc: "https://docs.google.com/document/d/1fP17MR7py5kAE3WhLUhaP6Z211nt3pcZSzmYrytvLOk/edit?usp=drive_link",
-    facebook: "https://www.facebook.com/gkgobabis/",
-    googleBusiness: "https://share.google/ICmQsJ9kmqwWJQGmM",
+    youtubeChannelId: "UCqYlRWltvAJaUrrbKyiIYsw",
     youtubeStreams: "https://www.youtube.com/@GKGobabis/streams",
-    youtubeChannelId: "",
-    youtubeEmbed: "",
+    mapsEmbed: "https://www.google.com/maps?q=Gereformeerde%20Kerk%20Gobabis&output=embed",
   },
 };
 
@@ -51,7 +32,7 @@ function setLink(linkId, url) {
 }
 
 function getGoogleDocPreviewUrl(url) {
-  const match = url.match(/\/document\/d\/([^/]+)/);
+  const match = url?.match(/\/document\/d\/([^/]+)/);
   if (!match) {
     return "";
   }
@@ -105,10 +86,8 @@ function renderServices(services = []) {
 
 function applySiteData(data) {
   const config = {
-    ...fallbackConfig,
     ...data,
-    church: { ...fallbackConfig.church, ...(data.church || {}) },
-    links: { ...fallbackConfig.links, ...(data.links || {}) },
+    links: { ...requiredDefaults.links, ...(data.links || {}) },
   };
 
   setTextFields(config);
@@ -118,11 +97,12 @@ function applySiteData(data) {
   setLink("google-business-link", config.links.googleBusiness);
   setLink("youtube-streams-link", config.links.youtubeStreams);
 
-  const docPreviewUrl = getGoogleDocPreviewUrl(config.links.googleDoc);
-  attachEmbed("google-doc-frame", "google-doc-placeholder", docPreviewUrl);
+  attachEmbed("google-doc-frame", "google-doc-placeholder", getGoogleDocPreviewUrl(config.links.googleDoc));
 
   const youtubeEmbedUrl = config.links.youtubeEmbed || getUploadsEmbedUrl(config.links.youtubeChannelId);
   attachEmbed("youtube-frame", "youtube-placeholder", youtubeEmbedUrl);
+
+  attachEmbed("map-frame", "map-placeholder", config.links.mapsEmbed);
 }
 
 async function loadJson(path) {
@@ -139,16 +119,9 @@ async function setupData() {
   try {
     const remoteSiteData = await loadJson(remoteSiteDataUrl);
     applySiteData(remoteSiteData);
-  } catch (remoteError) {
-    console.warn("Could not load Google Drive JSON. Falling back to local site-data.json.", remoteError);
-
-    try {
-      const localSiteData = await loadJson("site-data.json");
-      applySiteData(localSiteData);
-    } catch (localError) {
-      console.warn(localError);
-      applySiteData(fallbackConfig);
-    }
+  } catch (error) {
+    console.error("Google Drive JSON could not be loaded. Check sharing settings and JSON validity.", error);
+    document.body.classList.add("data-load-failed");
   }
 
   attachEmbed(
