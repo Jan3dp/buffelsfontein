@@ -42,8 +42,11 @@ code { background: rgba(92, 61, 46, 0.1); border-radius: 0.35rem; padding: 0.08r
 .button.secondary { border: 1px solid var(--line); background: var(--surface); color: var(--brand); }
 .text-link { display: inline-flex; margin-top: 1rem; color: var(--brand); font-weight: 800; }
 .disabled-link { color: var(--muted); cursor: default; text-decoration: none; }
-.hero-card, .contact-card, .sermon-card, .newsletter-card { border: 1px solid var(--line); border-radius: 1.5rem; background: rgba(255, 250, 242, 0.88); box-shadow: var(--shadow); padding: 1.5rem; }
-.hero-card h2, .section-heading h2, .split h2 { margin: 0; font-family: Georgia, "Times New Roman", serif; color: var(--brand-dark); font-size: clamp(1.8rem, 4vw, 2.85rem); line-height: 1.05; }
+.hero-card, .contact-card, .sermon-card, .newsletter-card, .feature-card, .info-card { border: 1px solid var(--line); border-radius: 1.5rem; background: rgba(255, 250, 242, 0.88); box-shadow: var(--shadow); padding: 1.5rem; }
+.feature-card { padding: clamp(1.5rem, 4vw, 2.25rem); max-width: 900px; }
+.info-card { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.hero-card h2, .section-heading h2, .split h2, .feature-card h2, .info-card h2 { margin: 0; font-family: Georgia, "Times New Roman", serif; color: var(--brand-dark); font-size: clamp(1.8rem, 4vw, 2.85rem); line-height: 1.05; }
+.feature-card p:last-child, .info-card p:last-child { color: var(--muted); max-width: 760px; }
 .service-list { display: grid; gap: 0.25rem; margin: 1rem 0; }
 .service-time { color: var(--brand); font-size: 2.65rem; font-weight: 900; line-height: 1; margin: 0.8rem 0 0.1rem; }
 .service-time.smaller { font-size: 2rem; }
@@ -79,6 +82,7 @@ code { background: rgba(92, 61, 46, 0.1); border-radius: 0.35rem; padding: 0.08r
 .contact-card p:last-child { margin-bottom: 0; }
 .site-footer { border-top: 1px solid var(--line); padding: 2rem 1.25rem; text-align: center; color: var(--muted); }
 .site-footer p { margin: 0.2rem 0; }
+.footer-verse { color: var(--brand-dark); font-family: Georgia, "Times New Roman", serif; font-size: 1.05rem; }
 @media (max-width: 900px) {
   .menu-button { display: inline-flex; }
   .nav { align-items: flex-start; }
@@ -87,7 +91,7 @@ code { background: rgba(92, 61, 46, 0.1); border-radius: 0.35rem; padding: 0.08r
   .nav-links a { padding: 0.55rem 0.4rem; }
   .hero, .content-layout, .split { grid-template-columns: 1fr; }
   .sticky-note { position: static; }
-  .sermon-card { align-items: stretch; flex-direction: column; }
+  .sermon-card, .info-card { align-items: stretch; flex-direction: column; }
   .doc-shell, .doc-shell iframe { min-height: 720px; height: 720px; }
   .folder-shell, .folder-shell iframe { min-height: 460px; height: 460px; }
   .map-shell, .map-shell iframe { min-height: 380px; height: 380px; }
