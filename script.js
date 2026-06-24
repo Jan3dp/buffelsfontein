@@ -1,3 +1,8 @@
+const driveConfig = {
+  siteDataFileId: "1KyC0bqMOTAOw9ptWBYLLKSEz9aFvbd_e",
+  newslettersFolderId: "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
+};
+
 const fallbackConfig = {
   church: {
     name: "Gereformeerde Kerk Gobabis",
@@ -20,6 +25,7 @@ const fallbackConfig = {
     facebook: "https://www.facebook.com/gkgobabis/",
     googleBusiness: "https://share.google/ICmQsJ9kmqwWJQGmM",
     youtubeStreams: "https://www.youtube.com/@GKGobabis/streams",
+    youtubeChannelId: "",
     youtubeEmbed: "",
   },
 };
@@ -52,6 +58,23 @@ function getGoogleDocPreviewUrl(url) {
   return `https://docs.google.com/document/d/${match[1]}/preview`;
 }
 
+function getDriveDownloadUrl(fileId) {
+  return `https://drive.google.com/uc?export=download&id=${fileId}`;
+}
+
+function getDriveFolderEmbedUrl(folderId) {
+  return `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
+}
+
+function getUploadsEmbedUrl(channelId) {
+  if (!channelId || !channelId.startsWith("UC")) {
+    return "";
+  }
+
+  const uploadsPlaylistId = `UU${channelId.slice(2)}`;
+  return `https://www.youtube.com/embed/videoseries?list=${uploadsPlaylistId}`;
+}
+
 function attachEmbed(frameId, placeholderId, url) {
   const frame = document.getElementById(frameId);
   const placeholder = document.getElementById(placeholderId);
@@ -80,36 +103,6 @@ function renderServices(services = []) {
     .join("");
 }
 
-function renderNewsletters(newsletters = []) {
-  const container = document.getElementById("newsletter-list");
-  if (!container) {
-    return;
-  }
-
-  const validNewsletters = newsletters.filter((item) => item.title);
-
-  if (!validNewsletters.length) {
-    return;
-  }
-
-  container.innerHTML = validNewsletters
-    .map((item) => {
-      const link = item.url
-        ? `<a href="${item.url}" target="_blank" rel="noopener">Lees nuusbrief</a>`
-        : `<span class="muted">Skakel nog nie beskikbaar nie</span>`;
-
-      return `
-        <article class="newsletter-card">
-          <p class="newsletter-date">${item.date || "Datum volg"}</p>
-          <h3>${item.title}</h3>
-          <p>${item.description || ""}</p>
-          ${link}
-        </article>
-      `;
-    })
-    .join("");
-}
-
 function applySiteData(data) {
   const config = {
     ...fallbackConfig,
@@ -127,7 +120,9 @@ function applySiteData(data) {
 
   const docPreviewUrl = getGoogleDocPreviewUrl(config.links.googleDoc);
   attachEmbed("google-doc-frame", "google-doc-placeholder", docPreviewUrl);
-  attachEmbed("youtube-frame", "youtube-placeholder", config.links.youtubeEmbed);
+
+  const youtubeEmbedUrl = config.links.youtubeEmbed || getUploadsEmbedUrl(config.links.youtubeChannelId);
+  attachEmbed("youtube-frame", "youtube-placeholder", youtubeEmbedUrl);
 }
 
 async function loadJson(path) {
@@ -139,20 +134,28 @@ async function loadJson(path) {
 }
 
 async function setupData() {
-  try {
-    const siteData = await loadJson("site-data.json");
-    applySiteData(siteData);
-  } catch (error) {
-    console.warn(error);
-    applySiteData(fallbackConfig);
-  }
+  const remoteSiteDataUrl = getDriveDownloadUrl(driveConfig.siteDataFileId);
 
   try {
-    const newsletterData = await loadJson("newsletters.json");
-    renderNewsletters(newsletterData.newsletters || []);
-  } catch (error) {
-    console.warn(error);
+    const remoteSiteData = await loadJson(remoteSiteDataUrl);
+    applySiteData(remoteSiteData);
+  } catch (remoteError) {
+    console.warn("Could not load Google Drive JSON. Falling back to local site-data.json.", remoteError);
+
+    try {
+      const localSiteData = await loadJson("site-data.json");
+      applySiteData(localSiteData);
+    } catch (localError) {
+      console.warn(localError);
+      applySiteData(fallbackConfig);
+    }
   }
+
+  attachEmbed(
+    "newsletter-folder-frame",
+    "newsletter-folder-placeholder",
+    getDriveFolderEmbedUrl(driveConfig.newslettersFolderId)
+  );
 }
 
 function setupMobileMenu() {
