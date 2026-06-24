@@ -1,6 +1,6 @@
 # Robots / Agent Instructions
 
-This repo is a simple GitHub Pages proof of concept for Gereformeerde Kerk Buffelsfontein.
+This repo is a simple GitHub Pages proof of concept for Gereformeerde Kerk Gobabis.
 
 ## Core constraints
 
@@ -15,19 +15,20 @@ This repo is a simple GitHub Pages proof of concept for Gereformeerde Kerk Buffe
 
 ## Content strategy
 
-The Google Doc is the main content source. Avoid hard-coding church details in HTML when they can live in the Doc.
+Use a document/data split:
 
-Good content for the Google Doc:
+- Google Doc: longer human-written content, announcements, explanations, pastoral notes, and general information.
+- `site-data.json`: structured assumptions and reusable values.
+- `newsletters.json`: newsletter index.
 
-- About the church
-- Reformed identity
-- Service times
-- Announcements
-- Contact details
-- Location information
-- Temporary notices
+Avoid hard-coding church details in HTML when they can live in JSON or the Google Doc.
 
-The HTML should act mostly as the frame: header, hero, embedded Doc, YouTube section, contact wrapper, and footer.
+## Current church
+
+Name: Gereformeerde Kerk Gobabis
+Short name: GK Gobabis
+Identity: Gereformeerd
+Language: Afrikaans
 
 ## Google Doc integration
 
@@ -35,11 +36,23 @@ Current document:
 
 `https://docs.google.com/document/d/1fP17MR7py5kAE3WhLUhaP6Z211nt3pcZSzmYrytvLOk/edit?usp=drive_link`
 
-Current preview embed:
+The site currently converts the Doc link to:
 
 `https://docs.google.com/document/d/1fP17MR7py5kAE3WhLUhaP6Z211nt3pcZSzmYrytvLOk/preview`
 
 If preview embedding fails, instruct the user to publish the document to web and use the `/pub?embedded=true` URL.
+
+## Facebook and Google profile
+
+Facebook:
+
+`https://www.facebook.com/gkgobabis/`
+
+Google profile:
+
+`https://share.google/ICmQsJ9kmqwWJQGmM`
+
+Do not assume the current phone number or address from memory. Only add those details when the user provides them or when they are deliberately verified.
 
 ## YouTube integration
 
@@ -49,9 +62,23 @@ Current streams URL:
 
 No API keys are allowed. Do not use the YouTube Data API for this POC.
 
-Preferred future improvement: ask the user for a dedicated YouTube playlist ID and use:
+A YouTube handle/streams page is not a clean embeddable URL by itself. Preferred future improvement: ask the user for a dedicated YouTube playlist ID and use:
 
 `https://www.youtube.com/embed/videoseries?list=PLAYLIST_ID`
+
+Set that URL in `site-data.json` at `links.youtubeEmbed`.
+
+## Newsletters
+
+The site reads newsletters from `newsletters.json`.
+
+Without a Google Drive API key or authenticated backend, do not promise automatic folder listing from Google Drive. Use a manifest file instead.
+
+Preferred no-API options:
+
+1. Public newsletter PDFs in Google Drive, manually listed in `newsletters.json`.
+2. Newsletter PDFs committed into this repo, manually listed in `newsletters.json`.
+3. Later GitHub Action to regenerate `newsletters.json` if a reliable source is provided.
 
 ## Deployment
 
@@ -67,10 +94,13 @@ Avoid many unnecessary commits in quick succession because GitHub Pages may canc
 - Warm, calm, traditional but not old-fashioned.
 - Reformed identity should be clear but not heavy-handed.
 - Keep the layout mobile-friendly.
-- The Google Doc should have the largest visual weight on the page.
+- The Google Doc should have large visual weight on the page.
+- Structured JSON values may appear in the hero, service card, contact card, and social links.
 
 ## Editing guidance
 
-When changing config, prefer editing `script.js`.
-When changing layout, prefer editing `styles.css`.
-When changing structure, edit `index.html` carefully and keep it simple.
+- Change church assumptions in `site-data.json`.
+- Change newsletter items in `newsletters.json`.
+- Change layout in `styles.css`.
+- Change structure in `index.html` only when needed.
+- Keep `script.js` simple and vanilla.
