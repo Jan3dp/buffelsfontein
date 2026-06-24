@@ -22,11 +22,11 @@
         <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
 
         <div class="nav-links" id="nav-links">
+          <a href="#wie-ons-is">Wie is ons?</a>
           <a href="#preke">Preke</a>
           <a href="#kontak">Kontak</a>
           <a href="#kaart">Kaart</a>
           <a href="#nuusbriewe">Nuusbriewe</a>
-          <a href="#meer-inligting">Meer inligting</a>
         </div>
       </nav>
     </header>
@@ -36,9 +36,9 @@
         <div class="hero-copy">
           <p class="eyebrow">Welkom</p>
           <h1 data-field="church.name">Gereformeerde Kerk Gobabis</h1>
-          <p class="lead" data-field="church.tagline">'n Warm, gereformeerde gemeente waar ons saam onder God se Woord leef en Christus as Koning bely.</p>
+          <p class="lead">Ons is 'n Gereformeerde gemeente in Gobabis waar Christus as Koning bely word en God se Woord sentraal staan.</p>
           <div class="hero-actions">
-            <a class="button primary" href="#preke">Kyk preke</a>
+            <a class="button primary" href="#preke">Kyk die jongste preke</a>
             <a class="button secondary" href="#kontak">Kontak ons</a>
             <a class="button secondary" href="#kaart">Kry rigting</a>
           </div>
@@ -53,32 +53,40 @@
             <p class="service-time smaller">18:00</p>
             <p>Aanddiens</p>
           </div>
-          <p class="muted">Diens-tye en kontakbesonderhede word uit <code>site-data.json</code> gelees.</p>
+          <p class="muted">Besoekers is hartlik welkom. Kyk gerus ook op Facebook vir die jongste aankondigings.</p>
         </aside>
+      </section>
+
+      <section class="section" id="wie-ons-is" aria-labelledby="identity-heading">
+        <div class="feature-card">
+          <p class="eyebrow">Wie is ons?</p>
+          <h2 id="identity-heading">'n Gemeente onder God se Woord</h2>
+          <p>Gereformeerde Kerk Gobabis wil as gemeente saam leef uit die genade van God, onder die gesag van sy Woord, en in diens van Christus en sy koninkryk.</p>
+        </div>
       </section>
 
       <section class="section sermon-layout" id="preke" aria-labelledby="sermons-heading">
         <div class="section-heading">
-          <p class="eyebrow">Preke en uitsendings</p>
-          <h2 id="sermons-heading">YouTube preke</h2>
-          <p>Die kanaal se uploads word embed met die channel ID, sonder 'n API sleutel.</p>
+          <p class="eyebrow">Preke en eredienste</p>
+          <h2 id="sermons-heading">Kyk vorige preke</h2>
+          <p>Kyk vorige eredienste en preke op die gemeente se YouTube-kanaal.</p>
         </div>
 
         <div class="embed-shell video-shell has-embed" id="youtube-embed-shell">
           <iframe id="youtube-frame" title="YouTube preke van Gereformeerde Kerk Gobabis" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
           <div class="placeholder" id="youtube-placeholder">
-            <h3>YouTube embed kan nog nie vertoon word nie</h3>
-            <p>Maak seker die channel ID is korrek of vul 'n volledige YouTube embed URL in <code>site-data.json</code> in.</p>
+            <h3>YouTube kan nog nie vertoon word nie</h3>
+            <p>Maak die gemeente se YouTube-kanaal oop om vorige eredienste en preke te kyk.</p>
           </div>
         </div>
 
         <div class="sermon-card">
           <div>
             <p class="eyebrow">YouTube</p>
-            <h3>GK Gobabis streams</h3>
-            <p>Direkte skakel na die jongste en vorige regstreekse uitsendings indien die embed nie laai nie.</p>
+            <h3>Gereformeerde Kerk Gobabis</h3>
+            <p>Gebruik die knoppie hieronder indien die video-venster nie op jou toestel laai nie.</p>
           </div>
-          <a class="button primary" id="youtube-streams-link" href="#" target="_blank" rel="noopener">Maak YouTube streams oop</a>
+          <a class="button primary" id="youtube-streams-link" href="#" target="_blank" rel="noopener">Maak YouTube-kanaal oop</a>
         </div>
       </section>
 
@@ -86,7 +94,7 @@
         <div>
           <p class="eyebrow">Kontak</p>
           <h2>Kontak en ligging</h2>
-          <p>Die bevestigde adres, telefoon en e-pos behoort in <code>site-data.json</code>. Facebook en Google bly nuttige eksterne skakels.</p>
+          <p>Kontakbesonderhede word hier bygewerk soos dit bevestig word. Facebook en die Google-profiel bly nuttig vir jongste aankondigings en ligging.</p>
           <div class="social-links">
             <a class="button secondary" id="facebook-link" href="#" target="_blank" rel="noopener">Facebook</a>
             <a class="button secondary" id="google-business-link" href="#" target="_blank" rel="noopener">Google profiel</a>
@@ -106,14 +114,14 @@
         <div class="section-heading">
           <p class="eyebrow">Kaart</p>
           <h2 id="map-heading">Waar om ons te kry</h2>
-          <p>Die kaart gebruik 'n gewone Google Maps embed sonder API sleutel.</p>
+          <p>Kry rigting na die gemeente met Google Maps.</p>
           <a class="text-link" id="maps-link" href="#" target="_blank" rel="noopener">Maak in Google Maps oop</a>
         </div>
         <div class="embed-shell map-shell">
           <iframe id="map-frame" title="Google Maps kaart vir Gereformeerde Kerk Gobabis" loading="lazy"></iframe>
           <div class="placeholder" id="map-placeholder">
             <h3>Kaart kan nog nie vertoon word nie</h3>
-            <p>Vul 'n mapsEmbed skakel in <code>site-data.json</code>, of gebruik die standaard soekkaart vir Gereformeerde Kerk Gobabis.</p>
+            <p>Maak die Google-profiel oop of probeer weer later.</p>
           </div>
         </div>
       </section>
@@ -121,37 +129,32 @@
       <section class="section" id="nuusbriewe" aria-labelledby="newsletters-heading">
         <div class="section-heading">
           <p class="eyebrow">Nuusbriewe</p>
-          <h2 id="newsletters-heading">Nuusbriewe uit Google Drive</h2>
-          <p>Die nuusbrief-folder word direk gewys sodat dokumente maklik in Google Drive bestuur kan word.</p>
+          <h2 id="newsletters-heading">Gemeentebriewe en afkondigings</h2>
+          <p>Lees die jongste gemeentebriewe, afkondigings en dokumente hier.</p>
         </div>
         <div class="embed-shell folder-shell">
           <iframe id="newsletter-folder-frame" title="Nuusbriewe uit Google Drive" loading="lazy"></iframe>
           <div class="placeholder" id="newsletter-folder-placeholder">
-            <h3>Nuusbrief-folder kan nog nie vertoon word nie</h3>
+            <h3>Nuusbriewe kan nog nie vertoon word nie</h3>
             <p>Maak seker die Google Drive folder is publiek of gedeel met anyone with the link.</p>
           </div>
         </div>
       </section>
 
-      <section class="section content-layout" id="meer-inligting" aria-labelledby="doc-heading">
-        <div class="section-heading sticky-note">
-          <p class="eyebrow">Meer inligting</p>
-          <h2 id="doc-heading">Aanvullende Google Doc</h2>
-          <p>Hierdie Google Doc is nou laer op die blad as aanvullende inhoud. Dit kan later kleiner word of heeltemal vervang word soos die webwerf se vaste afdelings groei.</p>
-          <a class="text-link" id="google-doc-link" href="#" target="_blank" rel="noopener">Maak die Google Doc oop</a>
-        </div>
-
-        <div class="embed-shell doc-shell">
-          <iframe id="google-doc-frame" title="Aanvullende inligting uit Google Docs" loading="lazy"></iframe>
-          <div class="placeholder" id="google-doc-placeholder">
-            <h3>Google Doc kan nog nie vertoon word nie</h3>
-            <p>Maak seker die dokument is gedeel met Anyone with the link can view, of publiseer dit met Publish to web.</p>
+      <section class="section" id="meer-inligting" aria-labelledby="doc-heading">
+        <div class="info-card">
+          <div>
+            <p class="eyebrow">Meer inligting</p>
+            <h2 id="doc-heading">Aanvullende dokument</h2>
+            <p>Die Google Doc bly vir nou beskikbaar as aanvullende inligting. Soos die webwerf groei, kan hierdie dokument kleiner word of later heeltemal verdwyn.</p>
           </div>
+          <a class="button secondary" id="google-doc-link" href="#" target="_blank" rel="noopener">Maak die Google Doc oop</a>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
+      <p class="footer-verse">1 Korintiërs 3:14 — As iemand se werk bly staan, sal hy loon ontvang.</p>
       <p>&copy; <span id="year"></span> <span data-field="church.name">Gereformeerde Kerk Gobabis</span>.</p>
       <p>Soli Deo Gloria.</p>
     </footer>
