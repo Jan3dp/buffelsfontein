@@ -1,5 +1,4 @@
 const driveConfig = {
-  siteDataFileId: "1KyC0bqMOTAOw9ptWBYLLKSEz9aFvbd_e",
   newslettersFolderId: "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
 };
 
@@ -61,14 +60,13 @@ function setContactActions(config) {
 
 function showDataError() {
   document.body.classList.add("data-load-failed");
-
   if (document.getElementById("data-alert")) return;
 
   const alert = document.createElement("div");
   alert.id = "data-alert";
   alert.className = "data-alert";
   alert.setAttribute("role", "status");
-  alert.textContent = "Die Google Drive JSON kon nie gelaai word nie. Maak seker die lêer is publiek gedeel en geldige JSON bevat.";
+  alert.textContent = "Die site-data.json lêer kon nie gelaai word nie. Maak seker die JSON is geldig en in die repo beskikbaar.";
 
   const main = document.querySelector("main");
   if (main) main.prepend(alert);
@@ -77,10 +75,6 @@ function showDataError() {
 function getGoogleDocPreviewUrl(url) {
   const match = url?.match(/\/document\/d\/([^/]+)/);
   return match ? `https://docs.google.com/document/d/${match[1]}/preview` : "";
-}
-
-function getDriveDownloadUrl(fileId) {
-  return `https://drive.google.com/uc?export=download&id=${fileId}`;
 }
 
 function getDriveFolderEmbedUrl(folderId) {
@@ -143,11 +137,11 @@ async function loadJson(path) {
 
 async function setupData() {
   try {
-    const remoteSiteData = await loadJson(getDriveDownloadUrl(driveConfig.siteDataFileId));
-    applySiteData(remoteSiteData);
+    const siteData = await loadJson("site-data.json");
+    applySiteData(siteData);
     document.body.classList.add("data-loaded");
   } catch (error) {
-    console.error("Google Drive JSON could not be loaded. Check sharing settings and JSON validity.", error);
+    console.error("site-data.json could not be loaded. Check JSON validity.", error);
     showDataError();
   }
 
