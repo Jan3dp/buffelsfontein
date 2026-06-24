@@ -1,15 +1,18 @@
 const siteConfig = {
-  // Replace this with the published Google Doc embed URL.
-  // In Google Docs: File > Share > Publish to web > Embed.
-  // Example format:
-  // https://docs.google.com/document/d/e/2PACX-.../pub?embedded=true
-  googleDocEmbedUrl: "",
+  // Google Doc provided by the church.
+  // This preview URL works when the document is shared as "Anyone with the link can view".
+  // If it does not display, use Google Docs: File > Share > Publish to web > Embed,
+  // then replace this value with the published /pub?embedded=true URL.
+  googleDocEmbedUrl: "https://docs.google.com/document/d/1fP17MR7py5kAE3WhLUhaP6Z211nt3pcZSzmYrytvLOk/preview",
+  googleDocOpenUrl: "https://docs.google.com/document/d/1fP17MR7py5kAE3WhLUhaP6Z211nt3pcZSzmYrytvLOk/edit?usp=drive_link",
 
-  // Replace this with a YouTube embed URL.
-  // Recommended no-API option: create a sermon playlist and use its embed URL.
-  // Example playlist format:
-  // https://www.youtube.com/embed/videoseries?list=YOUR_PLAYLIST_ID
-  // Example single channel uploads are harder without API/RSS, so playlist is best for now.
+  // No API key approach for now.
+  // YouTube channel handles do not give us a clean latest-streams embed by themselves,
+  // so the public streams page is linked directly.
+  youtubeStreamsUrl: "https://www.youtube.com/@GKGobabis/streams",
+
+  // Optional later: paste a real YouTube embed URL here, preferably a playlist:
+  // https://www.youtube.com/embed/videoseries?list=PLAYLIST_ID
   youtubeEmbedUrl: "",
 };
 
@@ -18,12 +21,32 @@ function attachEmbed(frameId, placeholderId, url) {
   const placeholder = document.getElementById(placeholderId);
 
   if (!frame || !placeholder || !url) {
-    return;
+    return false;
   }
 
   frame.src = url;
   frame.style.display = "block";
   placeholder.style.display = "none";
+  return true;
+}
+
+function attachLink(linkId, url) {
+  const link = document.getElementById(linkId);
+
+  if (!link || !url) {
+    return;
+  }
+
+  link.href = url;
+}
+
+function setupOptionalYouTubeEmbed() {
+  const shell = document.getElementById("youtube-embed-shell");
+  const attached = attachEmbed("youtube-frame", "youtube-placeholder", siteConfig.youtubeEmbedUrl);
+
+  if (shell && attached) {
+    shell.classList.add("has-embed");
+  }
 }
 
 function setupMobileMenu() {
@@ -56,6 +79,8 @@ function setupFooterYear() {
 }
 
 attachEmbed("google-doc-frame", "google-doc-placeholder", siteConfig.googleDocEmbedUrl);
-attachEmbed("youtube-frame", "youtube-placeholder", siteConfig.youtubeEmbedUrl);
+attachLink("google-doc-link", siteConfig.googleDocOpenUrl);
+attachLink("youtube-streams-link", siteConfig.youtubeStreamsUrl);
+setupOptionalYouTubeEmbed();
 setupMobileMenu();
 setupFooterYear();
