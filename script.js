@@ -8,6 +8,7 @@ const requiredDefaults = {
     youtubeChannelId: "UCqYlRWltvAJaUrrbKyiIYsw",
     youtubeStreams: "https://www.youtube.com/@GKGobabis/streams",
     mapsEmbed: "https://www.google.com/maps?q=Gereformeerde%20Kerk%20Gobabis&output=embed",
+    mapsOpen: "https://www.google.com/maps/search/?api=1&query=Gereformeerde%20Kerk%20Gobabis",
   },
 };
 
@@ -15,28 +16,52 @@ function getValue(data, path) {
   return path.split(".").reduce((current, key) => current?.[key], data);
 }
 
+function hasUsefulValue(value) {
+  return Boolean(value && !String(value).toLowerCase().includes("nog te bevestig"));
+}
+
 function setTextFields(data) {
   document.querySelectorAll("[data-field]").forEach((element) => {
     const value = getValue(data, element.dataset.field || "");
-    if (value) {
-      element.textContent = value;
-    }
+    if (value) element.textContent = value;
   });
 }
 
 function setLink(linkId, url) {
   const link = document.getElementById(linkId);
-  if (link && url) {
-    link.href = url;
+  if (link && url) link.href = url;
+}
+
+function setContactActions(config) {
+  const phone = config.church?.phone;
+  const email = config.church?.email;
+  const phoneLink = document.getElementById("phone-link");
+  const emailLink = document.getElementById("email-link");
+
+  if (phoneLink) {
+    if (hasUsefulValue(phone)) {
+      phoneLink.href = `tel:${String(phone).replace(/\s+/g, "")}`;
+      phoneLink.classList.remove("disabled-link");
+    } else {
+      phoneLink.removeAttribute("href");
+      phoneLink.classList.add("disabled-link");
+    }
+  }
+
+  if (emailLink) {
+    if (hasUsefulValue(email)) {
+      emailLink.href = `mailto:${email}`;
+      emailLink.classList.remove("disabled-link");
+    } else {
+      emailLink.removeAttribute("href");
+      emailLink.classList.add("disabled-link");
+    }
   }
 }
 
 function getGoogleDocPreviewUrl(url) {
   const match = url?.match(/\/document\/d\/([^/]+)/);
-  if (!match) {
-    return "";
-  }
-  return `https://docs.google.com/document/d/${match[1]}/preview`;
+  return match ? `https://docs.google.com/document/d/${match[1]}/preview` : "";
 }
 
 function getDriveDownloadUrl(fileId) {
@@ -48,22 +73,14 @@ function getDriveFolderEmbedUrl(folderId) {
 }
 
 function getUploadsEmbedUrl(channelId) {
-  if (!channelId || !channelId.startsWith("UC")) {
-    return "";
-  }
-
-  const uploadsPlaylistId = `UU${channelId.slice(2)}`;
-  return `https://www.youtube.com/embed/videoseries?list=${uploadsPlaylistId}`;
+  if (!channelId || !channelId.startsWith("UC")) return "";
+  return `https://www.youtube.com/embed/videoseries?list=UU${channelId.slice(2)}`;
 }
 
 function attachEmbed(frameId, placeholderId, url) {
   const frame = document.getElementById(frameId);
   const placeholder = document.getElementById(placeholderId);
-
-  if (!frame || !placeholder || !url) {
-    return false;
-  }
-
+  if (!frame || !placeholder || !url) return false;
   frame.src = url;
   frame.style.display = "block";
   placeholder.style.display = "none";
@@ -72,9 +89,7 @@ function attachEmbed(frameId, placeholderId, url) {
 
 function renderServices(services = []) {
   const container = document.getElementById("service-list");
-  if (!container || !services.length) {
-    return;
-  }
+  if (!container || !services.length) return;
 
   container.innerHTML = services
     .map((service, index) => `
@@ -92,52 +107,42 @@ function applySiteData(data) {
 
   setTextFields(config);
   renderServices(config.services);
+  setContactActions(config);
+
   setLink("google-doc-link", config.links.googleDoc);
   setLink("facebook-link", config.links.facebook);
   setLink("google-business-link", config.links.googleBusiness);
   setLink("youtube-streams-link", config.links.youtubeStreams);
+  setLink("maps-link", config.links.mapsOpen || config.links.mapsEmbed);
 
   attachEmbed("google-doc-frame", "google-doc-placeholder", getGoogleDocPreviewUrl(config.links.googleDoc));
-
-  const youtubeEmbedUrl = config.links.youtubeEmbed || getUploadsEmbedUrl(config.links.youtubeChannelId);
-  attachEmbed("youtube-frame", "youtube-placeholder", youtubeEmbedUrl);
-
+  attachEmbed("youtube-frame", "youtube-placeholder", config.links.youtubeEmbed || getUploadsEmbedUrl(config.links.youtubeChannelId));
   attachEmbed("map-frame", "map-placeholder", config.links.mapsEmbed);
 }
 
 async function loadJson(path) {
   const response = await fetch(path, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`Could not load ${path}`);
-  }
+  if (!response.ok) throw new Error(`Could not load ${path}`);
   return response.json();
 }
 
 async function setupData() {
-  const remoteSiteDataUrl = getDriveDownloadUrl(driveConfig.siteDataFileId);
-
   try {
-    const remoteSiteData = await loadJson(remoteSiteDataUrl);
+    const remoteSiteData = await loadJson(getDriveDownloadUrl(driveConfig.siteDataFileId));
     applySiteData(remoteSiteData);
+    document.body.classList.add("data-loaded");
   } catch (error) {
     console.error("Google Drive JSON could not be loaded. Check sharing settings and JSON validity.", error);
     document.body.classList.add("data-load-failed");
   }
 
-  attachEmbed(
-    "newsletter-folder-frame",
-    "newsletter-folder-placeholder",
-    getDriveFolderEmbedUrl(driveConfig.newslettersFolderId)
-  );
+  attachEmbed("newsletter-folder-frame", "newsletter-folder-placeholder", getDriveFolderEmbedUrl(driveConfig.newslettersFolderId));
 }
 
 function setupMobileMenu() {
   const button = document.querySelector(".menu-button");
   const links = document.getElementById("nav-links");
-
-  if (!button || !links) {
-    return;
-  }
+  if (!button || !links) return;
 
   button.addEventListener("click", () => {
     const isOpen = links.classList.toggle("is-open");
@@ -154,9 +159,7 @@ function setupMobileMenu() {
 
 function setupFooterYear() {
   const year = document.getElementById("year");
-  if (year) {
-    year.textContent = String(new Date().getFullYear());
-  }
+  if (year) year.textContent = String(new Date().getFullYear());
 }
 
 setupData();
