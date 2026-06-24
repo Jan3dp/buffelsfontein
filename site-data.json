@@ -4,32 +4,23 @@
     "shortName": "GK Gobabis",
     "language": "Afrikaans",
     "identity": "Gereformeerd",
-    "tagline": "’n Warm, gereformeerde gemeente waar ons saam onder God se Woord leef en Christus as Koning bely.",
+    "tagline": "n Warm, gereformeerde gemeente waar ons saam onder God se Woord leef en Christus as Koning bely.",
     "minister": "",
-    "location": "Gobabis, Namibië",
+    "location": "Gobabis, Namibie",
     "phone": "",
     "email": "",
     "address": ""
   },
   "services": [
-    {
-      "name": "Oggenddiens",
-      "time": "09:30"
-    },
-    {
-      "name": "Aanddiens",
-      "time": "18:00"
-    }
+    { "name": "Oggenddiens", "time": "09:30" },
+    { "name": "Aanddiens", "time": "18:00" }
   ],
   "links": {
     "googleDoc": "https://docs.google.com/document/d/1fP17MR7py5kAE3WhLUhaP6Z211nt3pcZSzmYrytvLOk/edit?usp=drive_link",
     "facebook": "https://www.facebook.com/gkgobabis/",
     "googleBusiness": "https://share.google/ICmQsJ9kmqwWJQGmM",
     "youtubeStreams": "https://www.youtube.com/@GKGobabis/streams",
+    "youtubeChannelId": "",
     "youtubeEmbed": ""
-  },
-  "notes": {
-    "youtubeEmbed": "Vul later 'n regte YouTube playlist embed URL in, bv. https://www.youtube.com/embed/videoseries?list=PLAYLIST_ID",
-    "contactDetails": "Adres, telefoon en e-pos kan hier ingevul word nadat dit vanaf Google/Facebook bevestig is."
   }
 }
