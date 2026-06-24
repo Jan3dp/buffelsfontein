@@ -2,13 +2,13 @@
 
 A simple GitHub Pages proof of concept for Gereformeerde Kerk Gobabis.
 
-Live site, once GitHub Pages has deployed:
+Live site:
 
 `https://jan3dp.github.io/buffelsfontein/`
 
 ## Current direction
 
-This site is intentionally simple and Google-Drive-first:
+This site is intentionally simple and GitHub-first:
 
 - Afrikaans one-page church website
 - Warm, Reformed tone
@@ -17,28 +17,37 @@ This site is intentionally simple and Google-Drive-first:
 - No build step
 - GitHub Pages hosting
 - Google Doc used for longer page content
-- Google Drive JSON used as the only structured content source
+- `site-data.json` in this repo is the only structured content source
 - Google Drive folder embedded for newsletters
 - YouTube uploads embedded from the channel ID
 - Google Maps embedded without an API key
 
 ## Single source of truth
 
-The live site now tries to load structured data only from the configured Google Drive JSON file.
+The live site loads structured data from `site-data.json` in this repository.
 
-There is no runtime backup to `site-data.json`, because that creates double updates and stale data risk. If the Drive JSON is not shared publicly enough, or if the JSON is invalid, the dynamic content will not update correctly.
+Do not keep a second JSON copy in Google Drive. That creates double updates, stale data, and confusion.
 
-## Google Drive JSON
+Use Google Drive only for:
 
-The JSON file ID is configured in `script.js`:
+- the long-form Google Doc content
+- the newsletter folder/files
 
-`1KyC0bqMOTAOw9ptWBYLLKSEz9aFvbd_e`
+Use GitHub `site-data.json` for:
 
-The file should be shared as:
+- church name
+- tagline
+- service times
+- minister
+- phone
+- email
+- address
+- Facebook link
+- Google profile link
+- YouTube settings
+- Maps settings
 
-`Anyone with the link -> Viewer`
-
-Recommended JSON shape:
+## `site-data.json` shape
 
 ```json
 {
@@ -48,7 +57,7 @@ Recommended JSON shape:
     "language": "Afrikaans",
     "identity": "Gereformeerd",
     "tagline": "'n Warm, gereformeerde gemeente waar ons saam onder God se Woord leef en Christus as Koning bely.",
-    "minister": "",
+    "minister": "Ds. Werner van den Heever",
     "location": "Gobabis, Namibie",
     "phone": "",
     "email": "",
@@ -65,7 +74,8 @@ Recommended JSON shape:
     "youtubeStreams": "https://www.youtube.com/@GKGobabis/streams",
     "youtubeChannelId": "UCqYlRWltvAJaUrrbKyiIYsw",
     "youtubeEmbed": "",
-    "mapsEmbed": "https://www.google.com/maps?q=Gereformeerde%20Kerk%20Gobabis&output=embed"
+    "mapsEmbed": "https://www.google.com/maps?q=Gereformeerde%20Kerk%20Gobabis&output=embed",
+    "mapsOpen": "https://www.google.com/maps/search/?api=1&query=Gereformeerde%20Kerk%20Gobabis"
   }
 }
 ```
@@ -80,7 +90,7 @@ If the preview embed does not show reliably, use the stronger publishing route:
 2. Go to **File > Share > Publish to web**.
 3. Choose **Embed**.
 4. Copy the published embed URL.
-5. Update the data model if we later add a separate published embed field.
+5. Add a new field later if a dedicated published embed URL is needed.
 
 ## YouTube
 
@@ -90,7 +100,7 @@ The channel ID is:
 
 The site derives the uploads playlist automatically by changing the `UC` prefix to `UU`, then embeds that playlist.
 
-A custom playlist can still be used later by adding a full embed URL to `links.youtubeEmbed` in the Drive JSON.
+A custom playlist can still be used later by adding a full embed URL to `links.youtubeEmbed` in `site-data.json`.
 
 ## Newsletters
 
@@ -106,13 +116,14 @@ The site embeds Google Maps without an API key by using a normal query embed URL
 
 `https://www.google.com/maps?q=Gereformeerde%20Kerk%20Gobabis&output=embed`
 
-For a more precise map, replace `links.mapsEmbed` in the Drive JSON with a more specific Google Maps embed/search URL.
+For a more precise map, replace `links.mapsEmbed` in `site-data.json` with a more specific Google Maps embed/search URL.
 
 ## Files
 
 - `index.html` - stable one-page frame
 - `styles.css` - design and layout
-- `script.js` - reads Drive JSON and renders embeds/links
+- `script.js` - reads `site-data.json` and renders embeds/links
+- `site-data.json` - the only structured content source
 - `favicon.svg` - current icon
 - `.nojekyll` - tells GitHub Pages not to process the site with Jekyll
 - `robots.md` - guidance for future AI/code agents working on the repo
@@ -126,7 +137,7 @@ In GitHub:
 2. Open **Pages**.
 3. Under **Build and deployment**, choose **Deploy from a branch**.
 4. Select branch: `main`.
-5. Select folder: `/root`.
+5. Select folder: `/ (root)`.
 6. Save.
 
-The first deployment can take a few minutes. Multiple quick commits can cause older Pages jobs to be cancelled while the newest one continues.
+Multiple quick commits can cause older Pages jobs to be cancelled while the newest one continues.
