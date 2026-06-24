@@ -1,0 +1,15 @@
+.folder-shell {
+  min-height: 560px;
+}
+
+.folder-shell iframe {
+  height: 560px;
+}
+
+@media (max-width: 900px) {
+  .folder-shell,
+  .folder-shell iframe {
+    min-height: 460px;
+    height: 460px;
+  }
+}
