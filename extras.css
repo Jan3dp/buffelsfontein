@@ -1,3 +1,133 @@
+.compact-section {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.hero {
+  gap: 1.25rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.1rem, 5vw, 4.1rem);
+}
+
+.lead {
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+}
+
+.button {
+  min-height: 2.75rem;
+  padding: 0 1.1rem;
+  gap: 0.45rem;
+}
+
+.compact-actions {
+  margin-top: 1rem;
+}
+
+.compact-card {
+  padding: 1.25rem;
+}
+
+.compact-service-list {
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: 0.85rem;
+}
+
+.compact-service-list .service-time {
+  font-size: 2.2rem;
+  margin-top: 0.55rem;
+}
+
+.compact-service-list .service-time.smaller {
+  font-size: 1.65rem;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.content-preview-card {
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  background: rgba(255, 250, 242, 0.88);
+  box-shadow: var(--shadow);
+  padding: 1.35rem;
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.content-preview-card h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brand-dark);
+  font-size: clamp(1.45rem, 3vw, 2.25rem);
+  line-height: 1.05;
+}
+
+.feed-updated {
+  margin: 0.8rem 0 0;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.preview-link {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: var(--surface-strong);
+  color: var(--brand-dark);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.preview-link img {
+  display: none;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--line);
+}
+
+.preview-link span {
+  display: block;
+  padding: 0.85rem;
+}
+
+.newsletter-mini-preview {
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: var(--surface-strong);
+  padding: 1rem;
+}
+
+.newsletter-mini-preview h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brand-dark);
+  font-size: 1.35rem;
+}
+
+.icon-button .social-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: var(--brand);
+  color: white;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 900;
+  line-height: 1;
+}
+
 .folder-shell {
   min-height: 560px;
 }
@@ -7,6 +137,10 @@
 }
 
 @media (max-width: 900px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+
   .folder-shell,
   .folder-shell iframe {
     min-height: 460px;
