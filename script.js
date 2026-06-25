@@ -3,9 +3,12 @@ const requiredDefaults = {
     youtubeChannelId: "UCqYlRWltvAJaUrrbKyiIYsw",
     youtubeStreams: "https://www.youtube.com/@GKGobabis/streams",
     youtubeEmbed: "",
-    youtubeFeedUrl: "",
     mapsEmbed: "https://www.google.com/maps?q=Gereformeerde%20Kerk%20Gobabis&output=embed",
     mapsOpen: "https://www.google.com/maps/search/?api=1&query=Gereformeerde%20Kerk%20Gobabis",
+  },
+  feeds: {
+    youtube: "",
+    newsletters: "",
   },
   newsletters: {
     folderId: "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
@@ -212,7 +215,7 @@ function renderVideos(videos = []) {
     return;
   }
 
-  list.innerHTML = videos.map((video, index) => `
+  list.innerHTML = videos.map((video) => `
     <button class="video-list-button" type="button" data-video-id="${video.videoId}">
       ${video.thumbnail ? `<img src="${video.thumbnail}" alt="" loading="lazy" />` : ""}
       <span>${video.publishedAt ? new Date(video.publishedAt).toLocaleDateString("af-ZA") : "Video"}</span>
@@ -252,6 +255,7 @@ function applySiteData(data) {
   const config = {
     ...data,
     links: { ...requiredDefaults.links, ...(data.links || {}) },
+    feeds: { ...requiredDefaults.feeds, ...(data.feeds || {}) },
     newsletters: { ...requiredDefaults.newsletters, ...(data.newsletters || {}) },
   };
 
@@ -270,7 +274,7 @@ function applySiteData(data) {
   attachEmbed("google-doc-frame", "google-doc-placeholder", getGoogleDocPreviewUrl(config.links.googleDoc));
   attachEmbed("youtube-frame", "youtube-placeholder", config.links.youtubeEmbed || getUploadsEmbedUrl(config.links.youtubeChannelId));
   attachEmbed("map-frame", "map-placeholder", config.links.mapsEmbed);
-  loadYouTubeFeed(config.links.youtubeFeedUrl);
+  loadYouTubeFeed(config.feeds.youtube || config.links.youtubeFeedUrl);
 }
 
 async function loadJson(path) {
