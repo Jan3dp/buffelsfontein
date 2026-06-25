@@ -116,16 +116,33 @@
 }
 
 .icon-button .social-icon {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.3rem;
+  height: 1.3rem;
   border-radius: 999px;
   display: inline-grid;
   place-items: center;
-  background: var(--brand);
   color: white;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: Arial, sans-serif;
+  font-size: 0.85rem;
   font-weight: 900;
   line-height: 1;
+}
+
+.facebook-icon {
+  background: #1877f2;
+  font-size: 1rem;
+}
+
+.google-icon {
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  color: #4285f4 !important;
+  font-size: 0.85rem;
+}
+
+.maps-icon {
+  background: #34a853;
+  font-size: 0.9rem;
 }
 
 .folder-shell {
