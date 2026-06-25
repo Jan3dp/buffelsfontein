@@ -22,19 +22,15 @@
     "youtubeStreams": "https://www.youtube.com/@GKGobabis/streams",
     "youtubeChannelId": "UCqYlRWltvAJaUrrbKyiIYsw",
     "youtubeEmbed": "",
-    "youtubeFeedUrl": "",
     "mapsEmbed": "https://www.google.com/maps?q=H.v.%20Kerk-%20en%20Quinto%20Cuanavalestraat%2C%20Gobabis&output=embed",
     "mapsOpen": "https://www.google.com/maps/search/?api=1&query=H.v.%20Kerk-%20en%20Quinto%20Cuanavalestraat%2C%20Gobabis"
   },
+  "feeds": {
+    "youtube": "https://script.google.com/macros/s/AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ/exec",
+    "newsletters": ""
+  },
   "newsletters": {
     "folderId": "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
-    "folderOpen": "https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link",
-    "latest": {
-      "title": "Nuutste gemeentebrief",
-      "date": "",
-      "url": "",
-      "viewerUrl": ""
-    },
-    "items": []
+    "folderOpen": "https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link"
   }
 }
