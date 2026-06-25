@@ -18,6 +18,14 @@ const requiredDefaults = {
   },
 };
 
+function setupExtraStyles() {
+  if (document.querySelector('link[href="extras.css"]')) return;
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "extras.css";
+  document.head.appendChild(link);
+}
+
 function getValue(data, path) {
   return path.split(".").reduce((current, key) => current?.[key], data);
 }
@@ -385,6 +393,7 @@ function setupFooterYear() {
   if (year) year.textContent = String(new Date().getFullYear());
 }
 
+setupExtraStyles();
 setupData();
 setupMobileMenu();
 setupFooterYear();
