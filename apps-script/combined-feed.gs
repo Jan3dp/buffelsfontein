@@ -1,8 +1,13 @@
 // Combined feed for Gereformeerde Kerk Gobabis
-// Use this if YouTube and newsletters live in one Apps Script project.
-// Deploy this as a web app, then use:
+// Paste this entire file into the Google Apps Script project.
+// Keep only one doGet(e) in the project.
+// Deploy as a web app, then use:
 //   /exec?feed=youtube
 //   /exec?feed=newsletters
+//
+// Manual testing in Apps Script:
+//   Run testYouTubeFeed_()
+//   Run testNewsletterFeed_()
 
 const CHANNEL_ID = 'UCqYlRWltvAJaUrrbKyiIYsw';
 const NEWSLETTER_FOLDER_ID = '15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl';
@@ -11,7 +16,8 @@ const MAX_YOUTUBE_RESULTS = 24;
 const MAX_NEWSLETTER_RESULTS = 50;
 
 function doGet(e) {
-  const feed = (e.parameter.feed || 'youtube').toLowerCase();
+  const params = e && e.parameter ? e.parameter : {};
+  const feed = (params.feed || 'youtube').toLowerCase();
   const output = feed === 'newsletters'
     ? getNewsletterFeed_()
     : getYouTubeFeed_();
@@ -19,6 +25,14 @@ function doGet(e) {
   return ContentService
     .createTextOutput(JSON.stringify(output))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function testYouTubeFeed_() {
+  console.log(JSON.stringify(getYouTubeFeed_(), null, 2));
+}
+
+function testNewsletterFeed_() {
+  console.log(JSON.stringify(getNewsletterFeed_(), null, 2));
 }
 
 function getYouTubeFeed_() {
