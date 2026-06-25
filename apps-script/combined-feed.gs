@@ -14,6 +14,12 @@ const NEWSLETTER_FOLDER_ID = '15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl';
 const CACHE_SECONDS = 30 * 60;
 const MAX_YOUTUBE_RESULTS = 24;
 const MAX_NEWSLETTER_RESULTS = 50;
+const NEWSLETTER_ALLOWED_MIME_TYPES = [
+  MimeType.PDF,
+  MimeType.GOOGLE_DOCS,
+  MimeType.MICROSOFT_WORD,
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+];
 
 function doGet(e) {
   const params = e && e.parameter ? e.parameter : {};
@@ -32,7 +38,7 @@ function testYouTubeFeed_() {
 }
 
 function testNewsletterFeed_() {
-  console.log(JSON.stringify(getNewsletterFeed_(), null, 2));
+  console.log(JSON.stringify(getNewsletterFeed_(true), null, 2));
 }
 
 function getYouTubeFeed_() {
@@ -108,33 +114,14 @@ function getPlaylistVideos_(apiKey, playlistId) {
     });
 }
 
-function getNewsletterFeed_() {
+function getNewsletterFeed_(skipCache) {
   const cache = CacheService.getScriptCache();
   const cached = cache.get('newsletter-feed');
-  if (cached) return JSON.parse(cached);
+  if (!skipCache && cached) return JSON.parse(cached);
 
-  const folder = DriveApp.getFolderById(NEWSLETTER_FOLDER_ID);
-  const files = folder.getFiles();
+  const rootFolder = DriveApp.getFolderById(NEWSLETTER_FOLDER_ID);
   const newsletters = [];
-
-  while (files.hasNext()) {
-    const file = files.next();
-    if (file.getMimeType() !== MimeType.PDF) continue;
-
-    const id = file.getId();
-    const name = file.getName();
-    const updated = file.getLastUpdated();
-
-    newsletters.push({
-      id: id,
-      title: cleanNewsletterTitle_(name),
-      fileName: name,
-      date: Utilities.formatDate(updated, 'Africa/Johannesburg', 'yyyy-MM-dd'),
-      updatedAt: updated.toISOString(),
-      url: 'https://drive.google.com/file/d/' + id + '/view?usp=drive_link',
-      viewerUrl: 'https://drive.google.com/file/d/' + id + '/preview'
-    });
-  }
+  collectNewsletterFiles_(rootFolder, newsletters, rootFolder.getName());
 
   newsletters.sort(function(a, b) {
     return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -143,6 +130,7 @@ function getNewsletterFeed_() {
   const output = {
     updatedAt: new Date().toISOString(),
     folderId: NEWSLETTER_FOLDER_ID,
+    count: newsletters.length,
     latest: newsletters[0] || null,
     items: newsletters.slice(0, MAX_NEWSLETTER_RESULTS)
   };
@@ -151,9 +139,56 @@ function getNewsletterFeed_() {
   return output;
 }
 
+function collectNewsletterFiles_(folder, newsletters, folderPath) {
+  const files = folder.getFiles();
+  while (files.hasNext()) {
+    const file = files.next();
+    const mimeType = file.getMimeType();
+    if (!isNewsletterFile_(mimeType, file.getName())) continue;
+    newsletters.push(toNewsletterItem_(file, folderPath));
+  }
+
+  const folders = folder.getFolders();
+  while (folders.hasNext()) {
+    const child = folders.next();
+    collectNewsletterFiles_(child, newsletters, folderPath + ' / ' + child.getName());
+  }
+}
+
+function isNewsletterFile_(mimeType, name) {
+  const lowerName = String(name || '').toLowerCase();
+  return NEWSLETTER_ALLOWED_MIME_TYPES.indexOf(mimeType) >= 0
+    || lowerName.endsWith('.pdf')
+    || lowerName.endsWith('.doc')
+    || lowerName.endsWith('.docx');
+}
+
+function toNewsletterItem_(file, folderPath) {
+  const id = file.getId();
+  const name = file.getName();
+  const updated = file.getLastUpdated();
+  const mimeType = file.getMimeType();
+  const isPreviewable = mimeType === MimeType.PDF || mimeType === MimeType.GOOGLE_DOCS;
+
+  return {
+    id: id,
+    title: cleanNewsletterTitle_(name),
+    fileName: name,
+    folderPath: folderPath,
+    mimeType: mimeType,
+    date: Utilities.formatDate(updated, 'Africa/Johannesburg', 'yyyy-MM-dd'),
+    updatedAt: updated.toISOString(),
+    url: file.getUrl(),
+    viewerUrl: isPreviewable
+      ? 'https://drive.google.com/file/d/' + id + '/preview'
+      : file.getUrl()
+  };
+}
+
 function cleanNewsletterTitle_(name) {
   return name
     .replace(/\.pdf$/i, '')
+    .replace(/\.docx?$/i, '')
     .replace(/[_-]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
