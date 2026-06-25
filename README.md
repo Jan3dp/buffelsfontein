@@ -39,15 +39,14 @@ Use `site-data.json` for:
 - Facebook link
 - Google profile link
 - YouTube channel ID
-- YouTube feed URL
 - Google Drive folder IDs/links
 - Maps settings
 
-### Dynamic data
+### Dynamic feed URLs
 
-Dynamic content should come from Google Apps Script feeds.
+The `feeds` block in `site-data.json` points to Google Apps Script feeds.
 
-Use Apps Script for:
+Use `feeds` for:
 
 - latest YouTube videos
 - later: latest newsletters from Google Drive
@@ -124,9 +123,12 @@ The key value must be stored only in Apps Script **Script Properties** as:
     "youtubeStreams": "https://www.youtube.com/@GKGobabis/streams",
     "youtubeChannelId": "UCqYlRWltvAJaUrrbKyiIYsw",
     "youtubeEmbed": "",
-    "youtubeFeedUrl": "https://script.google.com/macros/s/AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ/exec",
     "mapsEmbed": "https://www.google.com/maps?q=H.v.%20Kerk-%20en%20Quinto%20Cuanavalestraat%2C%20Gobabis&output=embed",
     "mapsOpen": "https://www.google.com/maps/search/?api=1&query=H.v.%20Kerk-%20en%20Quinto%20Cuanavalestraat%2C%20Gobabis"
+  },
+  "feeds": {
+    "youtube": "https://script.google.com/macros/s/AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ/exec",
+    "newsletters": ""
   },
   "newsletters": {
     "folderId": "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
