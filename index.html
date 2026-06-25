@@ -7,6 +7,7 @@
     <title>Gereformeerde Kerk Gobabis</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="extras.css" />
   </head>
   <body>
     <header class="site-header">
@@ -22,11 +23,12 @@
         <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
 
         <div class="nav-links" id="nav-links">
+          <a href="#top">Tuis</a>
           <a href="#wie-ons-is">Wie is ons?</a>
           <a href="preke.html">Preke</a>
+          <a href="nuusbriewe.html">Nuusbriewe</a>
           <a href="#kontak">Kontak</a>
           <a href="#kaart">Kaart</a>
-          <a href="#nuusbriewe">Nuusbriewe</a>
         </div>
       </nav>
     </header>
@@ -36,15 +38,15 @@
         <div class="hero-copy">
           <p class="eyebrow">Welkom</p>
           <h1 data-field="church.name">Gereformeerde Kerk Gobabis</h1>
-          <p class="lead">Ons is 'n Gereformeerde gemeente in Gobabis waar Christus as Koning bely word en God se Woord sentraal staan.</p>
+          <p class="lead">'n Gereformeerde gemeente in Gobabis waar Christus as Koning bely word en God se Woord sentraal staan.</p>
           <div class="hero-actions">
-            <a class="button primary" href="preke.html">Kyk die nuutste preke</a>
-            <a class="button secondary" href="#nuusbriewe">Lees nuusbrief</a>
+            <a class="button primary" href="preke.html">Preke</a>
+            <a class="button secondary" href="nuusbriewe.html">Nuusbriewe</a>
             <a class="button secondary" href="#kontak">Kontak ons</a>
           </div>
         </div>
 
-        <aside class="hero-card" aria-label="Kort gemeente inligting">
+        <aside class="hero-card compact-card" aria-label="Kort gemeente inligting">
           <p class="eyebrow">Sondag</p>
           <h2>Eredienste</h2>
           <div class="service-list compact-service-list" id="service-list">
@@ -61,16 +63,15 @@
         <div class="feature-card compact-card">
           <p class="eyebrow">Wie is ons?</p>
           <h2 id="identity-heading">'n Gemeente onder God se Woord</h2>
-          <p>Gereformeerde Kerk Gobabis wil as gemeente saam leef uit die genade van God, onder die gesag van sy Woord, en in diens van Christus en sy koninkryk.</p>
+          <p>Ons wil saam leef uit die genade van God, onder die gesag van sy Woord, en in diens van Christus en sy koninkryk.</p>
         </div>
       </section>
 
       <section class="section compact-section home-grid" aria-label="Nuutste inhoud">
-        <article class="content-preview-card" id="preke">
+        <article class="content-preview-card" id="preke-preview">
           <div>
-            <p class="eyebrow">Preke en eredienste</p>
-            <h2>Kyk die nuutste preke</h2>
-            <p class="muted">Kry die nuutste videos uit die gemeente se YouTube-kanaal.</p>
+            <p class="eyebrow">Preke</p>
+            <h2>Nuutste video</h2>
             <p class="feed-updated" id="youtube-updated">Laas opgedateer: wag vir feed</p>
           </div>
           <a class="preview-link" id="latest-video-link" href="preke.html" aria-label="Maak preke blad oop">
@@ -83,20 +84,20 @@
           </div>
         </article>
 
-        <article class="content-preview-card" id="nuusbriewe" aria-labelledby="newsletters-heading">
+        <article class="content-preview-card" id="nuusbriewe-preview">
           <div>
             <p class="eyebrow">Nuusbriewe</p>
-            <h2 id="newsletters-heading">Nuutste gemeentebrief</h2>
-            <p id="latest-newsletter-description" class="muted">Die nuutste nuusbrief sal hier verskyn sodra 'n PDF in die Google Drive folder beskikbaar is.</p>
+            <h2>Nuutste gemeentebrief</h2>
             <p class="feed-updated" id="newsletter-updated">Laas opgedateer: wag vir feed</p>
           </div>
           <div class="newsletter-mini-preview">
             <p class="newsletter-date" id="latest-newsletter-date">Nuutste</p>
             <h3 id="latest-newsletter-title">Nuutste gemeentebrief</h3>
+            <p id="latest-newsletter-description" class="muted">Die nuutste nuusbrief sal hier verskyn wanneer die Drive feed laai.</p>
           </div>
           <div class="hero-actions compact-actions">
-            <a class="button primary" id="latest-newsletter-link" href="nuusbriewe.html">Maak nuusbrief oop</a>
-            <a class="button secondary" href="nuusbriewe.html">Sien almal</a>
+            <a class="button primary" id="latest-newsletter-link" href="nuusbriewe.html">Maak oop</a>
+            <a class="button secondary" href="nuusbriewe.html">Argief</a>
           </div>
         </article>
       </section>
