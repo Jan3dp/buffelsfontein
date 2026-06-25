@@ -1,13 +1,15 @@
-const driveConfig = {
-  newslettersFolderId: "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
-};
-
 const requiredDefaults = {
   links: {
     youtubeChannelId: "UCqYlRWltvAJaUrrbKyiIYsw",
     youtubeStreams: "https://www.youtube.com/@GKGobabis/streams",
     mapsEmbed: "https://www.google.com/maps?q=Gereformeerde%20Kerk%20Gobabis&output=embed",
     mapsOpen: "https://www.google.com/maps/search/?api=1&query=Gereformeerde%20Kerk%20Gobabis",
+  },
+  newsletters: {
+    folderId: "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
+    folderOpen: "https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link",
+    latest: { title: "Nuutste gemeentebrief", date: "", url: "", viewerUrl: "" },
+    items: [],
   },
 };
 
@@ -77,6 +79,15 @@ function getGoogleDocPreviewUrl(url) {
   return match ? `https://docs.google.com/document/d/${match[1]}/preview` : "";
 }
 
+function getDriveFilePreviewUrl(url) {
+  if (!url) return "";
+  const fileMatch = url.match(/\/file\/d\/([^/]+)/);
+  if (fileMatch) return `https://drive.google.com/file/d/${fileMatch[1]}/preview`;
+  const idMatch = url.match(/[?&]id=([^&]+)/);
+  if (idMatch) return `https://drive.google.com/file/d/${idMatch[1]}/preview`;
+  return url;
+}
+
 function getDriveFolderEmbedUrl(folderId) {
   return `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
 }
@@ -108,15 +119,94 @@ function renderServices(services = []) {
     .join("");
 }
 
+function getNewsletterViewerUrl(newsletter) {
+  return newsletter?.viewerUrl || getDriveFilePreviewUrl(newsletter?.url || "");
+}
+
+function renderLatestNewsletter(newsletters) {
+  const latest = newsletters?.latest;
+  const title = document.getElementById("latest-newsletter-title");
+  const date = document.getElementById("latest-newsletter-date");
+  const description = document.getElementById("latest-newsletter-description");
+  const link = document.getElementById("latest-newsletter-link");
+
+  if (!title || !date || !description || !link) return;
+
+  title.textContent = latest?.title || "Nuutste gemeentebrief";
+  date.textContent = latest?.date || "Nuutste";
+
+  if (latest?.url || latest?.viewerUrl) {
+    description.textContent = latest.description || "Maak die nuutste gemeentebrief oop om dit te lees.";
+    link.href = latest.url || latest.viewerUrl;
+    link.target = "_blank";
+    link.rel = "noopener";
+  } else {
+    description.textContent = "Die nuutste nuusbrief sal hier verskyn sodra die PDF-skakel in site-data.json ingevul is.";
+    link.href = "nuusbriewe.html";
+  }
+}
+
+function renderNewsletterArchive(newsletters) {
+  const list = document.getElementById("newsletter-archive-list");
+  const reader = document.getElementById("newsletter-reader-frame");
+  const placeholder = document.getElementById("newsletter-reader-placeholder");
+  const folderLink = document.getElementById("newsletter-folder-link");
+  const folderFrame = document.getElementById("newsletter-folder-frame");
+  const folderPlaceholder = document.getElementById("newsletter-folder-placeholder");
+
+  if (folderLink) folderLink.href = newsletters.folderOpen || "#";
+
+  const items = [newsletters.latest, ...(newsletters.items || [])].filter((item) => item?.title);
+
+  if (list) {
+    list.innerHTML = items.length
+      ? items.map((item, index) => `
+          <button class="newsletter-list-button" type="button" data-newsletter-index="${index}">
+            <span>${item.date || "Gemeentebrief"}</span>
+            <strong>${item.title}</strong>
+          </button>
+        `).join("")
+      : `<p class="muted">Voeg PDF-skakels by die newsletters-afdeling in site-data.json. Tot dan wys die Drive-folder hieronder.</p>`;
+  }
+
+  if (reader && placeholder && items.length) {
+    const firstUrl = getNewsletterViewerUrl(items[0]);
+    if (firstUrl) {
+      reader.src = firstUrl;
+      reader.style.display = "block";
+      placeholder.style.display = "none";
+    }
+
+    list?.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-newsletter-index]");
+      if (!button) return;
+      const selected = items[Number(button.dataset.newsletterIndex)];
+      const url = getNewsletterViewerUrl(selected);
+      if (url) {
+        reader.src = url;
+        reader.style.display = "block";
+        placeholder.style.display = "none";
+      }
+    });
+  }
+
+  if (folderFrame && folderPlaceholder && newsletters.folderId) {
+    attachEmbed("newsletter-folder-frame", "newsletter-folder-placeholder", getDriveFolderEmbedUrl(newsletters.folderId));
+  }
+}
+
 function applySiteData(data) {
   const config = {
     ...data,
     links: { ...requiredDefaults.links, ...(data.links || {}) },
+    newsletters: { ...requiredDefaults.newsletters, ...(data.newsletters || {}) },
   };
 
   setTextFields(config);
   renderServices(config.services);
   setContactActions(config);
+  renderLatestNewsletter(config.newsletters);
+  renderNewsletterArchive(config.newsletters);
 
   setLink("google-doc-link", config.links.googleDoc);
   setLink("facebook-link", config.links.facebook);
@@ -144,8 +234,6 @@ async function setupData() {
     console.error("site-data.json could not be loaded. Check JSON validity.", error);
     showDataError();
   }
-
-  attachEmbed("newsletter-folder-frame", "newsletter-folder-placeholder", getDriveFolderEmbedUrl(driveConfig.newslettersFolderId));
 }
 
 function setupMobileMenu() {
