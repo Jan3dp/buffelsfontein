@@ -125,13 +125,13 @@ function renderVideoPage(videos = []) {
     placeholder.style.display = "none";
   }
 
-  list.addEventListener("click", (event) => {
+  list.onclick = (event) => {
     const button = event.target.closest("[data-video-id]");
     if (!button) return;
     frame.src = getYouTubeEmbedUrl(button.dataset.videoId);
     frame.style.display = "block";
     placeholder.style.display = "none";
-  });
+  };
 }
 
 function normalizeNewsletterFeed(feed = {}) {
@@ -190,7 +190,7 @@ function renderNewsletterPage(feedData = {}) {
     placeholder.style.display = "none";
   }
 
-  list.addEventListener("click", (event) => {
+  list.onclick = (event) => {
     const button = event.target.closest("[data-newsletter-index]");
     if (!button) return;
     const selected = items[Number(button.dataset.newsletterIndex)];
@@ -199,7 +199,7 @@ function renderNewsletterPage(feedData = {}) {
     reader.src = url;
     reader.style.display = "block";
     placeholder.style.display = "none";
-  });
+  };
 }
 
 function getCachedFeed(cacheKey) {
