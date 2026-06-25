@@ -132,8 +132,19 @@ function getNewsletterViewerUrl(newsletter) {
   return newsletter?.viewerUrl || getDriveFilePreviewUrl(newsletter?.url || "");
 }
 
+function normalizeNewsletterFeed(newsletters = {}) {
+  const items = newsletters.items || [];
+  const latest = newsletters.latest || items[0] || null;
+  return {
+    ...newsletters,
+    latest,
+    items: items.length ? items : latest ? [latest] : [],
+  };
+}
+
 function renderLatestNewsletter(newsletters) {
-  const latest = newsletters?.latest;
+  const feed = normalizeNewsletterFeed(newsletters);
+  const latest = feed.latest;
   const title = document.getElementById("latest-newsletter-title");
   const date = document.getElementById("latest-newsletter-date");
   const description = document.getElementById("latest-newsletter-description");
@@ -146,16 +157,17 @@ function renderLatestNewsletter(newsletters) {
 
   if (latest?.url || latest?.viewerUrl) {
     description.textContent = latest.description || "Maak die nuutste gemeentebrief oop om dit te lees.";
-    link.href = latest.url || latest.viewerUrl;
+    link.href = latest.viewerUrl || latest.url;
     link.target = "_blank";
     link.rel = "noopener";
   } else {
-    description.textContent = "Die nuutste nuusbrief sal hier verskyn sodra die PDF-skakel in site-data.json ingevul is.";
+    description.textContent = "Die nuutste nuusbrief sal hier verskyn sodra 'n PDF in die Google Drive folder beskikbaar is.";
     link.href = "nuusbriewe.html";
   }
 }
 
 function renderNewsletterArchive(newsletters) {
+  const feed = normalizeNewsletterFeed(newsletters);
   const list = document.getElementById("newsletter-archive-list");
   const reader = document.getElementById("newsletter-reader-frame");
   const placeholder = document.getElementById("newsletter-reader-placeholder");
@@ -163,9 +175,9 @@ function renderNewsletterArchive(newsletters) {
   const folderFrame = document.getElementById("newsletter-folder-frame");
   const folderPlaceholder = document.getElementById("newsletter-folder-placeholder");
 
-  if (folderLink) folderLink.href = newsletters.folderOpen || "#";
+  if (folderLink) folderLink.href = feed.folderOpen || "#";
 
-  const items = [newsletters.latest, ...(newsletters.items || [])].filter((item) => item?.title);
+  const items = feed.items.filter((item) => item?.title);
 
   if (list) {
     list.innerHTML = items.length
@@ -175,7 +187,7 @@ function renderNewsletterArchive(newsletters) {
             <strong>${item.title}</strong>
           </button>
         `).join("")
-      : `<p class="muted">Voeg PDF-skakels by die newsletters-afdeling in site-data.json. Tot dan wys die Drive-folder hieronder.</p>`;
+      : `<p class="muted">Laai PDF's in die Google Drive folder. Sodra die Drive feed gekoppel is, sal dit hier outomaties sorteer.</p>`;
   }
 
   if (reader && placeholder && items.length) {
@@ -199,8 +211,8 @@ function renderNewsletterArchive(newsletters) {
     });
   }
 
-  if (folderFrame && folderPlaceholder && newsletters.folderId) {
-    attachEmbed("newsletter-folder-frame", "newsletter-folder-placeholder", getDriveFolderEmbedUrl(newsletters.folderId));
+  if (folderFrame && folderPlaceholder && feed.folderId) {
+    attachEmbed("newsletter-folder-frame", "newsletter-folder-placeholder", getDriveFolderEmbedUrl(feed.folderId));
   }
 }
 
@@ -251,6 +263,28 @@ async function loadYouTubeFeed(feedUrl) {
   }
 }
 
+async function loadNewsletterFeed(feedUrl, fallbackNewsletters) {
+  renderLatestNewsletter(fallbackNewsletters);
+  renderNewsletterArchive(fallbackNewsletters);
+
+  if (!feedUrl) return;
+
+  try {
+    const response = await fetch(feedUrl, { cache: "no-store" });
+    if (!response.ok) throw new Error("Newsletter feed could not load");
+    const data = await response.json();
+    const merged = {
+      ...fallbackNewsletters,
+      ...data,
+      folderOpen: fallbackNewsletters.folderOpen,
+    };
+    renderLatestNewsletter(merged);
+    renderNewsletterArchive(merged);
+  } catch (error) {
+    console.error("Newsletter feed could not be loaded.", error);
+  }
+}
+
 function applySiteData(data) {
   const config = {
     ...data,
@@ -262,8 +296,7 @@ function applySiteData(data) {
   setTextFields(config);
   renderServices(config.services);
   setContactActions(config);
-  renderLatestNewsletter(config.newsletters);
-  renderNewsletterArchive(config.newsletters);
+  loadNewsletterFeed(config.feeds.newsletters, config.newsletters);
 
   setLink("google-doc-link", config.links.googleDoc);
   setLink("facebook-link", config.links.facebook);
