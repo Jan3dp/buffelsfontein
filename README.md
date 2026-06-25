@@ -1,62 +1,143 @@
-# Gereformeerde Kerk Gobabis - Website POC
+# Gereformeerde Kerk Gobabis - Website
 
-A simple GitHub Pages proof of concept for Gereformeerde Kerk Gobabis.
+A simple GitHub Pages website for Gereformeerde Kerk Gobabis.
 
 Live site:
 
 `https://jan3dp.github.io/buffelsfontein/`
 
-## Current direction
+## Current architecture
 
-This site is intentionally simple and GitHub-first, but dynamic feeds are allowed where they prevent weekly manual updates:
+This site is intentionally small and static:
 
-- Afrikaans church website
-- Warm, Reformed tone
-- GitHub Pages hosting
-- No build step
-- Static church information in `site-data.json`
-- Dynamic YouTube data from Google Apps Script
-- Newsletter folder/files in Google Drive
-- Google Maps embedded without a Maps API key
+- plain HTML, CSS and vanilla JavaScript
+- hosted on GitHub Pages from the `main` branch and repository root
+- no build step
+- no JavaScript framework
+- no backend/database in this repository
+- static church information in `site-data.json`
+- dynamic YouTube and newsletter feeds from Google Apps Script
+- browser-side feed cache in `localStorage` for faster repeat loads
 
-## Static vs dynamic data
+## Main files
 
-Keep these two ideas separate:
+- `index.html` - homepage
+- `preke.html` - sermons/video page
+- `nuusbriewe.html` - newsletter archive/reader page
+- `styles.css` - base layout and design
+- `extras.css` - compact homepage and small override styles
+- `script.js` - reads `site-data.json`, loads feeds, renders content, handles mobile menu
+- `site-data.json` - church details, links, service times and feed URLs
+- `apps-script/combined-feed.gs` - source for the Google Apps Script web app
+- `favicon.svg` - site favicon
+- `assets/icon-facebook.svg` - simple Facebook icon
+- `assets/icon-google.svg` - simple Google profile icon
+- `assets/icon-maps.svg` - simple Google Maps icon
+- `.nojekyll` - tells GitHub Pages not to process the site with Jekyll
+- `ADMIN.md` - admin notes for future maintenance
+- `robots.md` - instructions for future AI/code agents
 
-### Static data
+## Data model
 
-Static content lives in `site-data.json` in this repository.
+`site-data.json` is the source of truth for stable church information.
 
-Use `site-data.json` for:
+Use it for:
 
-- church name
-- tagline
-- service times
+- church name and location
 - minister
-- phone
-- email
-- address
+- service times
+- phone and email
+- physical address text
 - Facebook link
 - Google profile link
-- YouTube channel ID
-- Google Drive folder IDs/links
-- Maps settings
+- YouTube streams link
+- Google Maps link
+- Apps Script feed URLs
+- Google Drive newsletter folder open link
 
-### Dynamic feed URLs
+Do not put API keys in this repository.
 
-The `feeds` block in `site-data.json` points to Google Apps Script feeds.
+Current `site-data.json` shape:
 
-Use `feeds` for:
+```json
+{
+  "church": {
+    "name": "Gereformeerde Kerk Gobabis",
+    "shortName": "GK Gobabis",
+    "language": "Afrikaans",
+    "identity": "Gereformeerd",
+    "tagline": "'n Warm, gereformeerde gemeente waar ons saam onder God se Woord leef en Christus as Koning bely.",
+    "minister": "Ds. Chris Botha",
+    "location": "Gobabis, Namibie",
+    "phone": "+264 62 562 789",
+    "email": "gerfgbs@iway.na",
+    "address": "H.v. Kerk- en Quinto Cuanavalestraat, Gobabis"
+  },
+  "services": [
+    { "name": "Oggenddiens", "time": "09:00" },
+    { "name": "Aanddiens", "time": "18:00" }
+  ],
+  "links": {
+    "facebook": "https://www.facebook.com/gkgobabis/",
+    "googleBusiness": "https://share.google/ICmQsJ9kmqwWJQGmM",
+    "youtubeStreams": "https://www.youtube.com/@GKGobabis/streams",
+    "mapsOpen": "https://maps.app.goo.gl/xoGBmbYhC6gnPLHm9"
+  },
+  "feeds": {
+    "youtube": "https://script.google.com/macros/s/AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ/exec?feed=youtube",
+    "newsletters": "https://script.google.com/macros/s/AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ/exec?feed=newsletters"
+  },
+  "newsletters": {
+    "folderOpen": "https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link"
+  }
+}
+```
 
-- latest YouTube videos
-- later: latest newsletters from Google Drive
-- later: sorted newsletter archive
+## Feed loading
 
-Do not put API keys in this GitHub repo.
+The site loads the page first, then JavaScript loads data.
 
-## Important links
+`script.js` does this:
 
-### Apps Script
+1. Fetches `site-data.json`.
+2. Renders static details such as service times, contact details and links.
+3. Loads cached YouTube/newsletter JSON from browser `localStorage` immediately, if available.
+4. Refreshes each feed from Apps Script only if that cached copy is older than one hour.
+5. Saves successful feed responses back to `localStorage`.
+
+The one-hour browser cache is controlled in `script.js`:
+
+```js
+const FEED_REFRESH_MS = 60 * 60 * 1000;
+```
+
+Apps Script also has its own cache:
+
+```js
+const CACHE_SECONDS = 30 * 60;
+```
+
+So a returning visitor should see cached content quickly, while background refreshes happen only occasionally.
+
+## Apps Script
+
+The Apps Script source lives in:
+
+`apps-script/combined-feed.gs`
+
+Keep it as the only Apps Script file with `doGet(e)`.
+
+Routes:
+
+- `/exec?feed=youtube`
+- `/exec?feed=newsletters`
+
+Manual test functions in Apps Script:
+
+- `testYouTubeFeed_()`
+- `testNewsletterFeed_()`
+
+### Apps Script project
 
 Project name:
 
@@ -74,9 +155,24 @@ Deployment ID:
 
 `AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ`
 
-### Google Cloud
+### Deploying Apps Script changes
 
-Project:
+This repo does not automatically deploy Apps Script changes.
+
+After editing `apps-script/combined-feed.gs`, copy it into Apps Script and redeploy:
+
+1. Open Apps Script.
+2. Replace the code with the latest `apps-script/combined-feed.gs`.
+3. Deploy > Manage deployments.
+4. Edit the existing web app deployment.
+5. Version: New version.
+6. Deploy.
+
+Keep the same web app URL unless `site-data.json` is also updated.
+
+### Google Cloud / YouTube API
+
+Google Cloud project:
 
 `buffelsfontein`
 
@@ -92,140 +188,60 @@ API key name:
 
 `Buffelsfontein_YT_Key`
 
-The key value must be stored only in Apps Script **Script Properties** as:
+The key value must be stored only in Apps Script Script Properties as:
 
 `YOUTUBE_API_KEY`
 
-## `site-data.json` shape
-
-```json
-{
-  "church": {
-    "name": "Gereformeerde Kerk Gobabis",
-    "shortName": "GK Gobabis",
-    "language": "Afrikaans",
-    "identity": "Gereformeerd",
-    "tagline": "'n Warm, gereformeerde gemeente waar ons saam onder God se Woord leef en Christus as Koning bely.",
-    "minister": "Ds. Chris Botha",
-    "location": "Gobabis, Namibie",
-    "phone": "+264 62 562 789",
-    "email": "gerfgbs@iway.na",
-    "address": "H.v. Kerk- en Quinto Cuanavalestraat, Gobabis"
-  },
-  "services": [
-    { "name": "Oggenddiens", "time": "09:30" },
-    { "name": "Aanddiens", "time": "18:00" }
-  ],
-  "links": {
-    "googleDoc": "https://docs.google.com/document/d/1fP17MR7py5kAE3WhLUhaP6Z211nt3pcZSzmYrytvLOk/edit?usp=drive_link",
-    "facebook": "https://www.facebook.com/gkgobabis/",
-    "googleBusiness": "https://share.google/ICmQsJ9kmqwWJQGmM",
-    "youtubeStreams": "https://www.youtube.com/@GKGobabis/streams",
-    "youtubeChannelId": "UCqYlRWltvAJaUrrbKyiIYsw",
-    "youtubeEmbed": "",
-    "mapsEmbed": "https://www.google.com/maps?q=H.v.%20Kerk-%20en%20Quinto%20Cuanavalestraat%2C%20Gobabis&output=embed",
-    "mapsOpen": "https://www.google.com/maps/search/?api=1&query=H.v.%20Kerk-%20en%20Quinto%20Cuanavalestraat%2C%20Gobabis"
-  },
-  "feeds": {
-    "youtube": "https://script.google.com/macros/s/AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ/exec",
-    "newsletters": ""
-  },
-  "newsletters": {
-    "folderId": "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
-    "folderOpen": "https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link"
-  }
-}
-```
-
-## Apps Script workflow
-
-The Apps Script code lives in this repo under:
-
-`apps-script/youtube-feed.gs`
-
-The live Apps Script project is edited in Google's Apps Script editor. This repo does not automatically deploy Apps Script changes by itself.
-
-### Can Apps Script be linked to GitHub?
-
-Yes, but not directly through GitHub Pages.
-
-Options:
-
-1. **Manual copy/paste** - simplest for now. Keep the latest source in `apps-script/youtube-feed.gs`, then paste it into Apps Script when it changes.
-2. **clasp** - Google's command-line tool for Apps Script projects. This can pull/push Apps Script code from a local folder and can be used with GitHub, but it requires extra setup and local tooling.
-3. **GitHub Actions + clasp** - possible later, but more complex. It needs stored credentials/secrets and should only be added once the script stabilises.
-
-Current recommendation: use manual copy/paste until the script is stable.
-
-## YouTube
-
-The channel ID is:
-
-`UCqYlRWltvAJaUrrbKyiIYsw`
-
-The site has two YouTube modes:
-
-1. **Fallback, no API:** embed the uploads playlist by changing the channel ID prefix from `UC` to `UU`.
-2. **Dynamic, Apps Script:** read the YouTube Data API via Apps Script and show a video page with selectable video cards.
-
-The Apps Script uses:
-
-- `channels.list` to get the uploads playlist ID
-- `playlistItems.list` to list videos in that playlist
-
 ## Newsletters
 
-Current newsletter folder:
+Current Google Drive folder:
 
 `https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link`
 
-The site currently has:
+The Apps Script reads PDF and Google Docs files directly in that folder, sorts them by last updated date and returns:
 
-- homepage latest-newsletter card
-- `nuusbriewe.html` archive/reader page
-- Google Drive folder fallback embed
+- `updatedAt`
+- `count`
+- `latest`
+- `items[]`
 
-Later, add a Google Drive Apps Script feed so uploaded PDFs are listed and sorted automatically.
-
-## Google Doc
-
-The site converts the configured Google Doc edit link into a preview embed.
-
-If the preview embed does not show reliably, use the stronger publishing route:
-
-1. Open the Google Doc.
-2. Go to **File > Share > Publish to web**.
-3. Choose **Embed**.
-4. Copy the published embed URL.
-5. Add a new field later if a dedicated published embed URL is needed.
+For visitors to preview/open files reliably, the folder/files should be shared as anyone with the link can view.
 
 ## Maps
 
-The site embeds Google Maps without an API key by using a normal query embed URL.
+The visible address text is kept separately from the actual Google Maps link.
 
-For a more precise map, replace `links.mapsEmbed` in `site-data.json` with a more specific Google Maps embed/search URL.
+Current Maps link:
 
-## Files
+`https://maps.app.goo.gl/xoGBmbYhC6gnPLHm9`
 
-- `index.html` - homepage
-- `preke.html` - sermons/videos page
-- `nuusbriewe.html` - newsletter archive/reader page
-- `styles.css` - design and layout
-- `script.js` - reads `site-data.json`, Apps Script feeds and renders embeds/links
-- `site-data.json` - static config and feed URLs
-- `apps-script/youtube-feed.gs` - YouTube Apps Script source template
-- `favicon.svg` - current icon
-- `.nojekyll` - tells GitHub Pages not to process the site with Jekyll
-- `robots.md` - guidance for future AI/code agents working on the repo
-- `ADMIN.md` - admin notes
+## Housekeeping status
+
+Completed housekeeping:
+
+- removed old Google Doc embed references from the live frontend
+- removed old map/folder iframe fallback styling
+- removed old YouTube playlist fallback section
+- removed old newsletter folder fallback embed
+- removed unused `site-data.json` fields such as `googleDoc`, `youtubeEmbed`, `mapsEmbed`, `youtubeChannelId` and `folderId`
+- simplified social icons into small SVG files under `assets/`
+- added one-hour browser cache for feeds
+- updated favicon link with cache-busting query string
+
+Potential future improvements:
+
+- switch Apps Script deployment from manual copy/paste to `clasp` only if maintenance becomes frequent
+- add a single combined `feed=all` endpoint only if network requests become a real problem
+- replace placeholder SVG social icons with official approved assets if needed
+- add a short `CHANGELOG.md` if more people start editing the repo
 
 ## GitHub Pages setup
 
 In GitHub:
 
-1. Go to this repo's **Settings**.
-2. Open **Pages**.
-3. Under **Build and deployment**, choose **Deploy from a branch**.
+1. Go to this repo's Settings.
+2. Open Pages.
+3. Under Build and deployment, choose Deploy from a branch.
 4. Select branch: `main`.
 5. Select folder: `/ (root)`.
 6. Save.
