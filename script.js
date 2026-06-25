@@ -1,3 +1,5 @@
+const FEED_REFRESH_MS = 60 * 60 * 1000;
+
 const requiredDefaults = {
   links: {
     youtubeStreams: "https://www.youtube.com/@GKGobabis/streams",
@@ -200,34 +202,55 @@ function renderNewsletterPage(feedData = {}) {
   });
 }
 
-async function loadFeed(url) {
-  if (!url) return null;
-  const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) throw new Error(`Feed could not load: ${url}`);
-  return response.json();
-}
-
-async function loadYouTubeFeed(url) {
+function getCachedFeed(cacheKey) {
   try {
-    const data = await loadFeed(url);
-    if (!data) return;
-    renderLatestVideo(data.videos || [], data.updatedAt);
-    renderVideoPage(data.videos || []);
+    const raw = localStorage.getItem(cacheKey);
+    if (!raw) return null;
+    const cached = JSON.parse(raw);
+    if (!cached || !cached.data || !cached.savedAt) return null;
+    return cached;
   } catch (error) {
-    console.error("YouTube feed could not be loaded.", error);
+    console.warn("Cached feed could not be read.", error);
+    return null;
   }
 }
 
-async function loadNewsletterFeed(url) {
+function saveCachedFeed(cacheKey, data) {
   try {
-    const data = await loadFeed(url);
-    if (!data) return;
-    renderLatestNewsletter(data);
-    renderNewsletterPage(data);
+    localStorage.setItem(cacheKey, JSON.stringify({ savedAt: Date.now(), data }));
   } catch (error) {
-    console.error("Newsletter feed could not be loaded.", error);
-    renderLatestNewsletter({});
-    renderNewsletterPage({});
+    console.warn("Cached feed could not be saved.", error);
+  }
+}
+
+function isFresh(cached) {
+  return cached && Date.now() - cached.savedAt < FEED_REFRESH_MS;
+}
+
+function renderYouTubeFeed(data) {
+  renderLatestVideo(data?.videos || [], data?.updatedAt);
+  renderVideoPage(data?.videos || []);
+}
+
+function renderNewsletterFeed(data) {
+  renderLatestNewsletter(data || {});
+  renderNewsletterPage(data || {});
+}
+
+async function loadFeed(url, cacheKey, render) {
+  const cached = getCachedFeed(cacheKey);
+  if (cached?.data) render(cached.data);
+  if (!url || isFresh(cached)) return;
+
+  try {
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Feed could not load: ${url}`);
+    const data = await response.json();
+    saveCachedFeed(cacheKey, data);
+    render(data);
+  } catch (error) {
+    console.error("Feed could not be refreshed.", error);
+    if (!cached?.data) render({});
   }
 }
 
@@ -249,8 +272,8 @@ function applySiteData(data) {
   setLink("maps-link", config.links.mapsOpen);
   setLink("newsletter-folder-link", config.newsletters.folderOpen);
 
-  loadYouTubeFeed(config.feeds.youtube);
-  loadNewsletterFeed(config.feeds.newsletters);
+  loadFeed(config.feeds.youtube, "gkg-youtube-feed", renderYouTubeFeed);
+  loadFeed(config.feeds.newsletters, "gkg-newsletter-feed", renderNewsletterFeed);
 }
 
 async function setupData() {
