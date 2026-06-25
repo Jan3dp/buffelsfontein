@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="af">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Preke en eredienste van Gereformeerde Kerk Gobabis." />
+    <title>Preke | Gereformeerde Kerk Gobabis</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Hoofnavigasie">
+        <a class="brand" href="index.html" aria-label="Gereformeerde Kerk Gobabis tuis">
+          <span class="brand-mark">GK</span>
+          <span>
+            <strong data-field="church.name">Gereformeerde Kerk Gobabis</strong>
+            <small data-field="church.location">Gobabis, Namibie</small>
+          </span>
+        </a>
+
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+
+        <div class="nav-links" id="nav-links">
+          <a href="index.html#wie-ons-is">Wie is ons?</a>
+          <a href="preke.html">Preke</a>
+          <a href="index.html#kontak">Kontak</a>
+          <a href="index.html#kaart">Kaart</a>
+          <a href="nuusbriewe.html">Nuusbriewe</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="section compact-section">
+        <div class="section-heading">
+          <p class="eyebrow">Preke en eredienste</p>
+          <h1 class="page-title">Video's en vorige uitsendings</h1>
+          <p>Hier sal die nuutste videos outomaties uit die gemeente se YouTube-kanaal verskyn sodra die Apps Script feed gekoppel is.</p>
+          <a class="text-link" id="youtube-streams-link" href="#" target="_blank" rel="noopener">Maak YouTube-kanaal oop</a>
+        </div>
+      </section>
+
+      <section class="section video-page-layout" aria-label="Video-leser">
+        <div class="embed-shell video-shell video-page-player">
+          <iframe id="video-page-frame" title="Gekose preekvideo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+          <div class="placeholder" id="video-page-placeholder">
+            <h3>Video's laai nog nie outomaties nie</h3>
+            <p>Totdat die Apps Script feed gekoppel is, gebruik hierdie blad die gewone YouTube uploads playlist as terugval.</p>
+          </div>
+        </div>
+
+        <aside class="newsletter-sidebar video-sidebar">
+          <p class="eyebrow">Videos</p>
+          <h2>Kies 'n video</h2>
+          <div class="video-list" id="video-list"></div>
+        </aside>
+      </section>
+
+      <section class="section" aria-labelledby="playlist-heading">
+        <div class="section-heading">
+          <p class="eyebrow">Terugval</p>
+          <h2 id="playlist-heading">YouTube playlist</h2>
+          <p>Hierdie ingeboude playlist werk sonder API en bly beskikbaar as die outomatiese feed nie laai nie.</p>
+        </div>
+        <div class="embed-shell video-shell has-embed">
+          <iframe id="youtube-frame" title="YouTube preke van Gereformeerde Kerk Gobabis" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+          <div class="placeholder" id="youtube-placeholder">
+            <h3>YouTube kan nog nie vertoon word nie</h3>
+            <p>Maak die gemeente se YouTube-kanaal oop om vorige eredienste en preke te kyk.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="footer-verse">Kolossense 3:14 — Bo dit alles moet julle mekaar liefhê. Dit is die band wat julle tot volmaakte eenheid saambind.</p>
+      <p>&copy; <span id="year"></span> <span data-field="church.name">Gereformeerde Kerk Gobabis</span>.</p>
+      <p>Soli Deo Gloria.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
