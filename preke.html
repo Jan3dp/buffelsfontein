@@ -7,6 +7,7 @@
     <title>Preke | Gereformeerde Kerk Gobabis</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="extras.css" />
   </head>
   <body>
     <header class="site-header">
@@ -22,11 +23,12 @@
         <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
 
         <div class="nav-links" id="nav-links">
+          <a href="index.html">Tuis</a>
           <a href="index.html#wie-ons-is">Wie is ons?</a>
           <a href="preke.html">Preke</a>
+          <a href="nuusbriewe.html">Nuusbriewe</a>
           <a href="index.html#kontak">Kontak</a>
           <a href="index.html#kaart">Kaart</a>
-          <a href="nuusbriewe.html">Nuusbriewe</a>
         </div>
       </nav>
     </header>
@@ -36,7 +38,8 @@
         <div class="section-heading">
           <p class="eyebrow">Preke en eredienste</p>
           <h1 class="page-title">Video's en vorige uitsendings</h1>
-          <p>Hier sal die nuutste videos outomaties uit die gemeente se YouTube-kanaal verskyn sodra die Apps Script feed gekoppel is.</p>
+          <p>Die nuutste videos word outomaties uit die gemeente se YouTube-kanaal gelaai.</p>
+          <p class="feed-updated" id="youtube-updated">Laas opgedateer: wag vir feed</p>
           <a class="text-link" id="youtube-streams-link" href="#" target="_blank" rel="noopener">Maak YouTube-kanaal oop</a>
         </div>
       </section>
@@ -45,8 +48,8 @@
         <div class="embed-shell video-shell video-page-player">
           <iframe id="video-page-frame" title="Gekose preekvideo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
           <div class="placeholder" id="video-page-placeholder">
-            <h3>Video's laai nog nie outomaties nie</h3>
-            <p>Totdat die Apps Script feed gekoppel is, gebruik hierdie blad die gewone YouTube uploads playlist as terugval.</p>
+            <h3>Geen videos gelaai nie</h3>
+            <p>Maak seker die Apps Script web app is gedeploy en dat die YouTube feed beskikbaar is.</p>
           </div>
         </div>
 
@@ -55,21 +58,6 @@
           <h2>Kies 'n video</h2>
           <div class="video-list" id="video-list"></div>
         </aside>
-      </section>
-
-      <section class="section" aria-labelledby="playlist-heading">
-        <div class="section-heading">
-          <p class="eyebrow">Terugval</p>
-          <h2 id="playlist-heading">YouTube playlist</h2>
-          <p>Hierdie ingeboude playlist werk sonder API en bly beskikbaar as die outomatiese feed nie laai nie.</p>
-        </div>
-        <div class="embed-shell video-shell has-embed">
-          <iframe id="youtube-frame" title="YouTube preke van Gereformeerde Kerk Gobabis" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
-          <div class="placeholder" id="youtube-placeholder">
-            <h3>YouTube kan nog nie vertoon word nie</h3>
-            <p>Maak die gemeente se YouTube-kanaal oop om vorige eredienste en preke te kyk.</p>
-          </div>
-        </div>
       </section>
     </main>
 
