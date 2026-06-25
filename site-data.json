@@ -9,7 +9,7 @@
     "location": "Gobabis, Namibie",
     "phone": "+264 62 562 789",
     "email": "gerfgbs@iway.na",
-    "address": ""
+    "address": "H.v. Kerk- en Quinto Cuanavalestraat, Gobabis"
   },
   "services": [
     { "name": "Oggenddiens", "time": "09:30" },
@@ -22,7 +22,18 @@
     "youtubeStreams": "https://www.youtube.com/@GKGobabis/streams",
     "youtubeChannelId": "UCqYlRWltvAJaUrrbKyiIYsw",
     "youtubeEmbed": "",
-    "mapsEmbed": "https://www.google.com/maps?q=Gereformeerde%20Kerk%20Gobabis&output=embed",
-    "mapsOpen": "https://www.google.com/maps/search/?api=1&query=Gereformeerde%20Kerk%20Gobabis"
+    "mapsEmbed": "https://www.google.com/maps?q=H.v.%20Kerk-%20en%20Quinto%20Cuanavalestraat%2C%20Gobabis&output=embed",
+    "mapsOpen": "https://www.google.com/maps/search/?api=1&query=H.v.%20Kerk-%20en%20Quinto%20Cuanavalestraat%2C%20Gobabis"
+  },
+  "newsletters": {
+    "folderId": "15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl",
+    "folderOpen": "https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link",
+    "latest": {
+      "title": "Nuutste gemeentebrief",
+      "date": "",
+      "url": "",
+      "viewerUrl": ""
+    },
+    "items": []
   }
 }
