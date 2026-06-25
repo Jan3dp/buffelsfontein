@@ -7,6 +7,7 @@
     <title>Nuusbriewe | Gereformeerde Kerk Gobabis</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="extras.css" />
   </head>
   <body>
     <header class="site-header">
@@ -22,11 +23,12 @@
         <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
 
         <div class="nav-links" id="nav-links">
+          <a href="index.html">Tuis</a>
           <a href="index.html#wie-ons-is">Wie is ons?</a>
-          <a href="index.html#preke">Preke</a>
+          <a href="preke.html">Preke</a>
+          <a href="nuusbriewe.html">Nuusbriewe</a>
           <a href="index.html#kontak">Kontak</a>
           <a href="index.html#kaart">Kaart</a>
-          <a href="index.html#nuusbriewe">Terug na tuisblad</a>
         </div>
       </nav>
     </header>
@@ -36,8 +38,9 @@
         <div class="section-heading">
           <p class="eyebrow">Nuusbriewe</p>
           <h1 class="page-title">Gemeentebriewe en afkondigings</h1>
-          <p>Lees die nuutste en vorige gemeentebriewe hier. Wanneer PDF-skakels in <code>site-data.json</code> ingevul word, sal dit soos 'n eenvoudige leser vertoon.</p>
-          <a class="text-link" id="newsletter-folder-link" href="#" target="_blank" rel="noopener">Maak die Google Drive folder oop</a>
+          <p>Lees die nuutste en vorige gemeentebriewe. Die lys word outomaties uit die Google Drive feed opgebou.</p>
+          <p class="feed-updated" id="newsletter-updated">Laas opgedateer: wag vir feed</p>
+          <a class="text-link" id="newsletter-folder-link" href="#" target="_blank" rel="noopener">Maak Google Drive folder oop</a>
         </div>
       </section>
 
@@ -51,23 +54,8 @@
         <div class="embed-shell newsletter-reader-shell">
           <iframe id="newsletter-reader-frame" title="Nuusbrief-leser" loading="lazy"></iframe>
           <div class="placeholder" id="newsletter-reader-placeholder">
-            <h3>Nog geen PDF gekies nie</h3>
-            <p>Voeg PDF-skakels by die newsletters-afdeling in <code>site-data.json</code>. Tot dan kan die Google Drive folder hieronder gebruik word.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" aria-labelledby="folder-heading">
-        <div class="section-heading">
-          <p class="eyebrow">Drive folder</p>
-          <h2 id="folder-heading">Alle beskikbare dokumente</h2>
-          <p>Hierdie folder wys die dokumente direk uit Google Drive. Dit is nuttig terwyl die PDF-argieflys nog opgebou word.</p>
-        </div>
-        <div class="embed-shell folder-shell">
-          <iframe id="newsletter-folder-frame" title="Nuusbriewe uit Google Drive" loading="lazy"></iframe>
-          <div class="placeholder" id="newsletter-folder-placeholder">
-            <h3>Drive folder kan nog nie vertoon word nie</h3>
-            <p>Maak seker die Google Drive folder is publiek of gedeel met anyone with the link.</p>
+            <h3>Geen nuusbrief gelaai nie</h3>
+            <p>Maak seker die Apps Script web app is gedeploy en dat die Drive folder dokumente bevat wat die script kan lees.</p>
           </div>
         </div>
       </section>
