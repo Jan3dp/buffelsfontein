@@ -1,48 +1,96 @@
 # Robots / Agent Instructions
 
-This repo is a simple GitHub Pages proof of concept for Gereformeerde Kerk Gobabis.
+This repo is a simple GitHub Pages site for Gereformeerde Kerk Gobabis.
 
 ## Core constraints
 
 - Keep the site static.
 - Do not add API keys.
-- Do not add a backend.
-- Do not add a database.
+- Do not add a backend or database to this repo.
 - Do not add a JavaScript framework unless explicitly requested.
-- Prefer plain HTML, CSS, and small vanilla JavaScript.
+- Prefer plain HTML, CSS and small vanilla JavaScript.
 - Keep the language Afrikaans unless the user asks otherwise.
-- Keep the tone warm and Reformed.
+- Keep the tone warm, calm and Reformed.
 
-## Content strategy
+## Current architecture
 
-Use a document/data split:
+The site uses:
 
-- Google Doc: longer human-written content, announcements, explanations, pastoral notes, and general information.
-- `site-data.json`: structured assumptions and reusable values.
-- `newsletters.json`: newsletter index.
+- `site-data.json` for stable structured church data and links
+- `apps-script/combined-feed.gs` for YouTube and newsletter feeds
+- `script.js` for rendering, mobile menu and browser-side feed caching
+- `styles.css` for base layout
+- `extras.css` for compact homepage and small overrides
 
-Avoid hard-coding church details in HTML when they can live in JSON or the Google Doc.
+There is no build step.
 
-## Current church
+## Source of truth
+
+Use `site-data.json` for:
+
+- church information
+- service times
+- contact details
+- Maps/Facebook/Google/YouTube links
+- Apps Script feed URLs
+- Google Drive newsletter folder link
+
+Do not create a second manual JSON manifest unless the user explicitly asks for that.
+
+## Dynamic feeds
+
+Current Apps Script base URL:
+
+`https://script.google.com/macros/s/AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ/exec`
+
+Routes:
+
+- `?feed=youtube`
+- `?feed=newsletters`
+
+The frontend caches successful feed responses in browser `localStorage` for one hour.
+
+Do not remove this cache unless there is a clear reason. It makes repeat visits much faster and reduces Apps Script requests.
+
+## Apps Script
+
+The current Apps Script source file is:
+
+`apps-script/combined-feed.gs`
+
+Keep it as the only Apps Script source file with `doGet(e)`.
+
+Do not reintroduce old split files like:
+
+- `apps-script/youtube-feed.gs`
+- `apps-script/newsletter-feed.gs`
+
+The live Apps Script project is not automatically deployed from GitHub. If the source changes, remind the user to paste it into Apps Script and redeploy a new version.
+
+## API keys
+
+The YouTube API key must not be committed.
+
+It belongs only in Apps Script Script Properties as:
+
+`YOUTUBE_API_KEY`
+
+## Current church details
 
 Name: Gereformeerde Kerk Gobabis
 Short name: GK Gobabis
 Identity: Gereformeerd
 Language: Afrikaans
+Minister: Ds. Chris Botha
+Phone: +264 62 562 789
+Email: gerfgbs@iway.na
 
-## Google Doc integration
+Service times:
 
-Current document:
+- Oggenddiens: 09:00
+- Aanddiens: 18:00
 
-`https://docs.google.com/document/d/1fP17MR7py5kAE3WhLUhaP6Z211nt3pcZSzmYrytvLOk/edit?usp=drive_link`
-
-The site currently converts the Doc link to:
-
-`https://docs.google.com/document/d/1fP17MR7py5kAE3WhLUhaP6Z211nt3pcZSzmYrytvLOk/preview`
-
-If preview embedding fails, instruct the user to publish the document to web and use the `/pub?embedded=true` URL.
-
-## Facebook and Google profile
+## Links
 
 Facebook:
 
@@ -52,55 +100,58 @@ Google profile:
 
 `https://share.google/ICmQsJ9kmqwWJQGmM`
 
-Do not assume the current phone number or address from memory. Only add those details when the user provides them or when they are deliberately verified.
-
-## YouTube integration
-
-Current streams URL:
+YouTube streams:
 
 `https://www.youtube.com/@GKGobabis/streams`
 
-No API keys are allowed. Do not use the YouTube Data API for this POC.
+Google Maps:
 
-A YouTube handle/streams page is not a clean embeddable URL by itself. Preferred future improvement: ask the user for a dedicated YouTube playlist ID and use:
+`https://maps.app.goo.gl/xoGBmbYhC6gnPLHm9`
 
-`https://www.youtube.com/embed/videoseries?list=PLAYLIST_ID`
+Newsletter Drive folder:
 
-Set that URL in `site-data.json` at `links.youtubeEmbed`.
+`https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link`
 
-## Newsletters
+## Things deliberately removed
 
-The site reads newsletters from `newsletters.json`.
+Do not casually re-add these old ideas:
 
-Without a Google Drive API key or authenticated backend, do not promise automatic folder listing from Google Drive. Use a manifest file instead.
+- Google Doc preview/embed as main content
+- Google Drive folder iframe fallback
+- YouTube playlist iframe fallback
+- Google Maps iframe embed
+- manual `newsletters.json`
+- old `googleDoc`, `youtubeEmbed`, `mapsEmbed`, `youtubeChannelId` and `folderId` fields in `site-data.json`
 
-Preferred no-API options:
+The current direction is cleaner: static pages + two Apps Script JSON feeds.
 
-1. Public newsletter PDFs in Google Drive, manually listed in `newsletters.json`.
-2. Newsletter PDFs committed into this repo, manually listed in `newsletters.json`.
-3. Later GitHub Action to regenerate `newsletters.json` if a reliable source is provided.
+## Editing guidance
+
+- Change church assumptions in `site-data.json`.
+- Change frontend behavior in `script.js`.
+- Change base styling in `styles.css`.
+- Change homepage compact styling in `extras.css`.
+- Change page structure in the HTML files only when needed.
+- Keep repeated head/nav/footer markup manually aligned across `index.html`, `preke.html` and `nuusbriewe.html` unless a build step is deliberately introduced later.
+
+## Testing checklist
+
+After edits, test:
+
+1. `https://jan3dp.github.io/buffelsfontein/`
+2. `preke.html`
+3. `nuusbriewe.html`
+4. mobile menu
+5. Facebook, Google profile and Maps links
+6. `?feed=youtube`
+7. `?feed=newsletters`
+8. favicon in a private/incognito window
 
 ## Deployment
 
 GitHub Pages should deploy from:
 
 - Branch: `main`
-- Folder: `/root`
+- Folder: `/ (root)`
 
-Avoid many unnecessary commits in quick succession because GitHub Pages may cancel queued duplicate deployments.
-
-## Style direction
-
-- Warm, calm, traditional but not old-fashioned.
-- Reformed identity should be clear but not heavy-handed.
-- Keep the layout mobile-friendly.
-- The Google Doc should have large visual weight on the page.
-- Structured JSON values may appear in the hero, service card, contact card, and social links.
-
-## Editing guidance
-
-- Change church assumptions in `site-data.json`.
-- Change newsletter items in `newsletters.json`.
-- Change layout in `styles.css`.
-- Change structure in `index.html` only when needed.
-- Keep `script.js` simple and vanilla.
+Avoid unnecessary rapid commits because GitHub Pages may cancel queued duplicate deployments.
