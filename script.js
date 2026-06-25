@@ -2,6 +2,8 @@ const requiredDefaults = {
   links: {
     youtubeChannelId: "UCqYlRWltvAJaUrrbKyiIYsw",
     youtubeStreams: "https://www.youtube.com/@GKGobabis/streams",
+    youtubeEmbed: "",
+    youtubeFeedUrl: "",
     mapsEmbed: "https://www.google.com/maps?q=Gereformeerde%20Kerk%20Gobabis&output=embed",
     mapsOpen: "https://www.google.com/maps/search/?api=1&query=Gereformeerde%20Kerk%20Gobabis",
   },
@@ -95,6 +97,10 @@ function getDriveFolderEmbedUrl(folderId) {
 function getUploadsEmbedUrl(channelId) {
   if (!channelId || !channelId.startsWith("UC")) return "";
   return `https://www.youtube.com/embed/videoseries?list=UU${channelId.slice(2)}`;
+}
+
+function getYouTubeEmbedUrl(videoId) {
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
 }
 
 function attachEmbed(frameId, placeholderId, url) {
@@ -195,6 +201,53 @@ function renderNewsletterArchive(newsletters) {
   }
 }
 
+function renderVideos(videos = []) {
+  const list = document.getElementById("video-list");
+  const frame = document.getElementById("video-page-frame");
+  const placeholder = document.getElementById("video-page-placeholder");
+  if (!list || !frame || !placeholder) return;
+
+  if (!videos.length) {
+    list.innerHTML = `<p class="muted">Die outomatiese YouTube feed is nog nie gekoppel nie. Gebruik intussen die playlist hieronder.</p>`;
+    return;
+  }
+
+  list.innerHTML = videos.map((video, index) => `
+    <button class="video-list-button" type="button" data-video-id="${video.videoId}">
+      ${video.thumbnail ? `<img src="${video.thumbnail}" alt="" loading="lazy" />` : ""}
+      <span>${video.publishedAt ? new Date(video.publishedAt).toLocaleDateString("af-ZA") : "Video"}</span>
+      <strong>${video.title}</strong>
+    </button>
+  `).join("");
+
+  const firstVideo = videos.find((video) => video.videoId);
+  if (firstVideo) {
+    frame.src = getYouTubeEmbedUrl(firstVideo.videoId);
+    frame.style.display = "block";
+    placeholder.style.display = "none";
+  }
+
+  list.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-video-id]");
+    if (!button) return;
+    frame.src = getYouTubeEmbedUrl(button.dataset.videoId);
+    frame.style.display = "block";
+    placeholder.style.display = "none";
+  });
+}
+
+async function loadYouTubeFeed(feedUrl) {
+  if (!feedUrl || !document.getElementById("video-list")) return;
+  try {
+    const response = await fetch(feedUrl, { cache: "no-store" });
+    if (!response.ok) throw new Error("YouTube feed could not load");
+    const data = await response.json();
+    renderVideos(data.videos || []);
+  } catch (error) {
+    console.error("YouTube feed could not be loaded.", error);
+  }
+}
+
 function applySiteData(data) {
   const config = {
     ...data,
@@ -217,6 +270,7 @@ function applySiteData(data) {
   attachEmbed("google-doc-frame", "google-doc-placeholder", getGoogleDocPreviewUrl(config.links.googleDoc));
   attachEmbed("youtube-frame", "youtube-placeholder", config.links.youtubeEmbed || getUploadsEmbedUrl(config.links.youtubeChannelId));
   attachEmbed("map-frame", "map-placeholder", config.links.mapsEmbed);
+  loadYouTubeFeed(config.links.youtubeFeedUrl);
 }
 
 async function loadJson(path) {
