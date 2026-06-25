@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="af">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Nuusbriewe en gemeentebriewe van Gereformeerde Kerk Gobabis." />
+    <title>Nuusbriewe | Gereformeerde Kerk Gobabis</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Hoofnavigasie">
+        <a class="brand" href="index.html" aria-label="Gereformeerde Kerk Gobabis tuis">
+          <span class="brand-mark">GK</span>
+          <span>
+            <strong data-field="church.name">Gereformeerde Kerk Gobabis</strong>
+            <small data-field="church.location">Gobabis, Namibie</small>
+          </span>
+        </a>
+
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+
+        <div class="nav-links" id="nav-links">
+          <a href="index.html#wie-ons-is">Wie is ons?</a>
+          <a href="index.html#preke">Preke</a>
+          <a href="index.html#kontak">Kontak</a>
+          <a href="index.html#kaart">Kaart</a>
+          <a href="index.html#nuusbriewe">Terug na tuisblad</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="section compact-section">
+        <div class="section-heading">
+          <p class="eyebrow">Nuusbriewe</p>
+          <h1 class="page-title">Gemeentebriewe en afkondigings</h1>
+          <p>Lees die nuutste en vorige gemeentebriewe hier. Wanneer PDF-skakels in <code>site-data.json</code> ingevul word, sal dit soos 'n eenvoudige leser vertoon.</p>
+          <a class="text-link" id="newsletter-folder-link" href="#" target="_blank" rel="noopener">Maak die Google Drive folder oop</a>
+        </div>
+      </section>
+
+      <section class="section newsletter-reader-layout" aria-label="Nuusbrief-leser">
+        <aside class="newsletter-sidebar">
+          <p class="eyebrow">Argief</p>
+          <h2>Kies 'n nuusbrief</h2>
+          <div class="newsletter-archive-list" id="newsletter-archive-list"></div>
+        </aside>
+
+        <div class="embed-shell newsletter-reader-shell">
+          <iframe id="newsletter-reader-frame" title="Nuusbrief-leser" loading="lazy"></iframe>
+          <div class="placeholder" id="newsletter-reader-placeholder">
+            <h3>Nog geen PDF gekies nie</h3>
+            <p>Voeg PDF-skakels by die newsletters-afdeling in <code>site-data.json</code>. Tot dan kan die Google Drive folder hieronder gebruik word.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="folder-heading">
+        <div class="section-heading">
+          <p class="eyebrow">Drive folder</p>
+          <h2 id="folder-heading">Alle beskikbare dokumente</h2>
+          <p>Hierdie folder wys die dokumente direk uit Google Drive. Dit is nuttig terwyl die PDF-argieflys nog opgebou word.</p>
+        </div>
+        <div class="embed-shell folder-shell">
+          <iframe id="newsletter-folder-frame" title="Nuusbriewe uit Google Drive" loading="lazy"></iframe>
+          <div class="placeholder" id="newsletter-folder-placeholder">
+            <h3>Drive folder kan nog nie vertoon word nie</h3>
+            <p>Maak seker die Google Drive folder is publiek of gedeel met anyone with the link.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="footer-verse">Kolossense 3:14 — Bo dit alles moet julle mekaar liefhê. Dit is die band wat julle tot volmaakte eenheid saambind.</p>
+      <p>&copy; <span id="year"></span> <span data-field="church.name">Gereformeerde Kerk Gobabis</span>.</p>
+      <p>Soli Deo Gloria.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
