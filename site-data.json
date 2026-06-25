@@ -12,7 +12,7 @@
     "address": "H.v. Kerk- en Quinto Cuanavalestraat, Gobabis"
   },
   "services": [
-    { "name": "Oggenddiens", "time": "09:30" },
+    { "name": "Oggenddiens", "time": "09:00" },
     { "name": "Aanddiens", "time": "18:00" }
   ],
   "links": {
