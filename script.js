@@ -26,6 +26,19 @@ function hasUsefulValue(value) {
   return Boolean(value && !String(value).toLowerCase().includes("nog te bevestig"));
 }
 
+function formatDate(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleString("af-ZA", { dateStyle: "medium", timeStyle: "short" });
+}
+
+function setFeedUpdated(elementId, updatedAt, fallbackText = "Laas opgedateer: nog nie beskikbaar nie") {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+  element.textContent = updatedAt ? `Laas opgedateer: ${formatDate(updatedAt)}` : fallbackText;
+}
+
 function setTextFields(data) {
   document.querySelectorAll("[data-field]").forEach((element) => {
     const value = getValue(data, element.dataset.field || "");
@@ -154,6 +167,7 @@ function renderLatestNewsletter(newsletters) {
 
   title.textContent = latest?.title || "Nuutste gemeentebrief";
   date.textContent = latest?.date || "Nuutste";
+  setFeedUpdated("newsletter-updated", feed.updatedAt || latest?.updatedAt);
 
   if (latest?.url || latest?.viewerUrl) {
     description.textContent = latest.description || "Maak die nuutste gemeentebrief oop om dit te lees.";
@@ -163,6 +177,7 @@ function renderLatestNewsletter(newsletters) {
   } else {
     description.textContent = "Die nuutste nuusbrief sal hier verskyn sodra 'n PDF in die Google Drive folder beskikbaar is.";
     link.href = "nuusbriewe.html";
+    link.removeAttribute("target");
   }
 }
 
@@ -216,6 +231,25 @@ function renderNewsletterArchive(newsletters) {
   }
 }
 
+function renderLatestVideoPreview(videos = [], updatedAt = "") {
+  const latest = videos.find((video) => video.videoId);
+  const link = document.getElementById("latest-video-link");
+  const thumb = document.getElementById("latest-video-thumb");
+  const title = document.getElementById("latest-video-title");
+
+  setFeedUpdated("youtube-updated", updatedAt || latest?.publishedAt);
+
+  if (!latest || !link || !thumb || !title) return;
+
+  link.href = "preke.html";
+  title.textContent = latest.title || "Nuutste video";
+
+  if (latest.thumbnail) {
+    thumb.src = latest.thumbnail;
+    thumb.style.display = "block";
+  }
+}
+
 function renderVideos(videos = []) {
   const list = document.getElementById("video-list");
   const frame = document.getElementById("video-page-frame");
@@ -252,11 +286,12 @@ function renderVideos(videos = []) {
 }
 
 async function loadYouTubeFeed(feedUrl) {
-  if (!feedUrl || !document.getElementById("video-list")) return;
+  if (!feedUrl) return;
   try {
     const response = await fetch(feedUrl, { cache: "no-store" });
     if (!response.ok) throw new Error("YouTube feed could not load");
     const data = await response.json();
+    renderLatestVideoPreview(data.videos || [], data.updatedAt);
     renderVideos(data.videos || []);
   } catch (error) {
     console.error("YouTube feed could not be loaded.", error);
