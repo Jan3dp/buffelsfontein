@@ -39,118 +39,94 @@
           <p class="lead">Ons is 'n Gereformeerde gemeente in Gobabis waar Christus as Koning bely word en God se Woord sentraal staan.</p>
           <div class="hero-actions">
             <a class="button primary" href="preke.html">Kyk die nuutste preke</a>
+            <a class="button secondary" href="#nuusbriewe">Lees nuusbrief</a>
             <a class="button secondary" href="#kontak">Kontak ons</a>
-            <a class="button secondary" href="#kaart">Kry rigting</a>
           </div>
         </div>
 
         <aside class="hero-card" aria-label="Kort gemeente inligting">
           <p class="eyebrow">Sondag</p>
           <h2>Eredienste</h2>
-          <div class="service-list" id="service-list">
+          <div class="service-list compact-service-list" id="service-list">
             <p class="service-time">09:30</p>
             <p>Oggenddiens</p>
             <p class="service-time smaller">18:00</p>
             <p>Aanddiens</p>
           </div>
-          <p class="muted">Besoekers is hartlik welkom. Kyk gerus ook op Facebook vir die nuutste aankondigings.</p>
+          <p class="muted">Besoekers is hartlik welkom.</p>
         </aside>
       </section>
 
-      <section class="section" id="wie-ons-is" aria-labelledby="identity-heading">
-        <div class="feature-card">
+      <section class="section compact-section" id="wie-ons-is" aria-labelledby="identity-heading">
+        <div class="feature-card compact-card">
           <p class="eyebrow">Wie is ons?</p>
           <h2 id="identity-heading">'n Gemeente onder God se Woord</h2>
           <p>Gereformeerde Kerk Gobabis wil as gemeente saam leef uit die genade van God, onder die gesag van sy Woord, en in diens van Christus en sy koninkryk.</p>
         </div>
       </section>
 
-      <section class="section sermon-layout" id="preke" aria-labelledby="sermons-heading">
-        <div class="section-heading">
-          <p class="eyebrow">Preke en eredienste</p>
-          <h2 id="sermons-heading">Kyk vorige preke</h2>
-          <p>Kyk vorige eredienste en preke op die gemeente se YouTube-kanaal.</p>
-        </div>
-
-        <div class="embed-shell video-shell has-embed" id="youtube-embed-shell">
-          <iframe id="youtube-frame" title="YouTube preke van Gereformeerde Kerk Gobabis" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
-          <div class="placeholder" id="youtube-placeholder">
-            <h3>YouTube kan nog nie vertoon word nie</h3>
-            <p>Maak die gemeente se YouTube-kanaal oop om vorige eredienste en preke te kyk.</p>
-          </div>
-        </div>
-
-        <div class="sermon-card">
+      <section class="section compact-section home-grid" aria-label="Nuutste inhoud">
+        <article class="content-preview-card" id="preke">
           <div>
-            <p class="eyebrow">YouTube</p>
-            <h3>Gereformeerde Kerk Gobabis</h3>
-            <p>Maak die volledige preke-blad oop om videos makliker te blaai sodra die outomatiese feed gekoppel is.</p>
+            <p class="eyebrow">Preke en eredienste</p>
+            <h2>Kyk die nuutste preke</h2>
+            <p class="muted">Kry die nuutste videos uit die gemeente se YouTube-kanaal.</p>
+            <p class="feed-updated" id="youtube-updated">Laas opgedateer: wag vir feed</p>
           </div>
-          <a class="button primary" href="preke.html">Sien alle preke</a>
-        </div>
+          <a class="preview-link" id="latest-video-link" href="preke.html" aria-label="Maak preke blad oop">
+            <img id="latest-video-thumb" alt="" loading="lazy" />
+            <span id="latest-video-title">Maak die preke-blad oop</span>
+          </a>
+          <div class="hero-actions compact-actions">
+            <a class="button primary" href="preke.html">Sien alle preke</a>
+            <a class="button secondary" id="youtube-streams-link" href="#" target="_blank" rel="noopener">YouTube</a>
+          </div>
+        </article>
+
+        <article class="content-preview-card" id="nuusbriewe" aria-labelledby="newsletters-heading">
+          <div>
+            <p class="eyebrow">Nuusbriewe</p>
+            <h2 id="newsletters-heading">Nuutste gemeentebrief</h2>
+            <p id="latest-newsletter-description" class="muted">Die nuutste nuusbrief sal hier verskyn sodra 'n PDF in die Google Drive folder beskikbaar is.</p>
+            <p class="feed-updated" id="newsletter-updated">Laas opgedateer: wag vir feed</p>
+          </div>
+          <div class="newsletter-mini-preview">
+            <p class="newsletter-date" id="latest-newsletter-date">Nuutste</p>
+            <h3 id="latest-newsletter-title">Nuutste gemeentebrief</h3>
+          </div>
+          <div class="hero-actions compact-actions">
+            <a class="button primary" id="latest-newsletter-link" href="nuusbriewe.html">Maak nuusbrief oop</a>
+            <a class="button secondary" href="nuusbriewe.html">Sien almal</a>
+          </div>
+        </article>
       </section>
 
-      <section class="section split contact" id="kontak">
+      <section class="section compact-section split contact" id="kontak">
         <div>
           <p class="eyebrow">Kontak</p>
           <h2>Kontak en ligging</h2>
-          <p>Kontakbesonderhede word hier bygewerk soos dit bevestig word. Facebook en die Google-profiel bly nuttig vir die nuutste aankondigings en ligging.</p>
+          <p>Kontakbesonderhede, Facebook en die Google-profiel bly nuttig vir die nuutste aankondigings en ligging.</p>
           <div class="social-links">
-            <a class="button secondary" id="facebook-link" href="#" target="_blank" rel="noopener">Facebook</a>
+            <a class="button secondary icon-button" id="facebook-link" href="#" target="_blank" rel="noopener" aria-label="Maak Facebook oop"><span class="social-icon">f</span> Facebook</a>
             <a class="button secondary" id="google-business-link" href="#" target="_blank" rel="noopener">Google profiel</a>
           </div>
         </div>
-        <div class="contact-card">
-          <p><strong>Gemeente:</strong> <span data-field="church.name">Gereformeerde Kerk Gobabis</span></p>
+        <div class="contact-card compact-card">
           <p><strong>Dominee:</strong> <span data-field="church.minister">Nog te bevestig</span></p>
           <p><strong>Telefoon:</strong> <a id="phone-link"><span data-field="church.phone">Nog te bevestig</span></a></p>
           <p><strong>E-pos:</strong> <a id="email-link"><span data-field="church.email">Nog te bevestig</span></a></p>
           <p><strong>Adres:</strong> <span data-field="church.address">Nog te bevestig</span></p>
-          <p><strong>Ligging:</strong> <span data-field="church.location">Gobabis, Namibie</span></p>
         </div>
       </section>
 
-      <section class="section" id="kaart" aria-labelledby="map-heading">
-        <div class="section-heading">
-          <p class="eyebrow">Kaart</p>
-          <h2 id="map-heading">Waar om ons te kry</h2>
-          <p>Kry rigting na die gemeente met Google Maps.</p>
-          <a class="text-link" id="maps-link" href="#" target="_blank" rel="noopener">Maak in Google Maps oop</a>
-        </div>
-        <div class="embed-shell map-shell">
-          <iframe id="map-frame" title="Google Maps kaart vir Gereformeerde Kerk Gobabis" loading="lazy"></iframe>
-          <div class="placeholder" id="map-placeholder">
-            <h3>Kaart kan nog nie vertoon word nie</h3>
-            <p>Maak die Google-profiel oop of probeer weer later.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="nuusbriewe" aria-labelledby="newsletters-heading">
-        <div class="section-heading">
-          <p class="eyebrow">Nuusbriewe</p>
-          <h2 id="newsletters-heading">Nuutste gemeentebrief</h2>
-          <p>Lees die nuutste gemeentebrief hier, of maak die argief oop vir vorige uitgawes.</p>
-        </div>
-        <div class="newsletter-card" id="latest-newsletter-card">
-          <p class="newsletter-date" id="latest-newsletter-date">Nuutste</p>
-          <h3 id="latest-newsletter-title">Nuutste gemeentebrief</h3>
-          <p id="latest-newsletter-description">Die nuutste nuusbrief sal hier verskyn sodra die PDF-skakel in site-data.json ingevul is.</p>
-          <div class="hero-actions">
-            <a class="button primary" id="latest-newsletter-link" href="nuusbriewe.html">Maak nuusbrief oop</a>
-            <a class="button secondary" href="nuusbriewe.html">Sien alle nuusbriewe</a>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="meer-inligting" aria-labelledby="doc-heading">
-        <div class="info-card">
+      <section class="section compact-section" id="kaart" aria-labelledby="map-heading">
+        <div class="info-card compact-card">
           <div>
-            <p class="eyebrow">Meer inligting</p>
-            <h2 id="doc-heading">Aanvullende dokument</h2>
-            <p>Die Google Doc bly vir nou beskikbaar as aanvullende inligting. Soos die webwerf groei, kan hierdie dokument kleiner word of later heeltemal verdwyn.</p>
+            <p class="eyebrow">Kaart</p>
+            <h2 id="map-heading">Waar om ons te kry</h2>
+            <p>Kry rigting na die gemeente met Google Maps.</p>
           </div>
-          <a class="button secondary" id="google-doc-link" href="#" target="_blank" rel="noopener">Maak die Google Doc oop</a>
+          <a class="button secondary" id="maps-link" href="#" target="_blank" rel="noopener">Maak in Google Maps oop</a>
         </div>
       </section>
     </main>
