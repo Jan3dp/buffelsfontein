@@ -129,14 +129,16 @@
       <section class="section" id="nuusbriewe" aria-labelledby="newsletters-heading">
         <div class="section-heading">
           <p class="eyebrow">Nuusbriewe</p>
-          <h2 id="newsletters-heading">Gemeentebriewe en afkondigings</h2>
-          <p>Lees die nuutste gemeentebriewe, afkondigings en dokumente hier.</p>
+          <h2 id="newsletters-heading">Nuutste gemeentebrief</h2>
+          <p>Lees die nuutste gemeentebrief hier, of maak die argief oop vir vorige uitgawes.</p>
         </div>
-        <div class="embed-shell folder-shell">
-          <iframe id="newsletter-folder-frame" title="Nuusbriewe uit Google Drive" loading="lazy"></iframe>
-          <div class="placeholder" id="newsletter-folder-placeholder">
-            <h3>Nuusbriewe kan nog nie vertoon word nie</h3>
-            <p>Maak seker die Google Drive folder is publiek of gedeel met anyone with the link.</p>
+        <div class="newsletter-card" id="latest-newsletter-card">
+          <p class="newsletter-date" id="latest-newsletter-date">Nuutste</p>
+          <h3 id="latest-newsletter-title">Nuutste gemeentebrief</h3>
+          <p id="latest-newsletter-description">Die nuutste nuusbrief sal hier verskyn sodra die PDF-skakel in site-data.json ingevul is.</p>
+          <div class="hero-actions">
+            <a class="button primary" id="latest-newsletter-link" href="nuusbriewe.html">Maak nuusbrief oop</a>
+            <a class="button secondary" href="nuusbriewe.html">Sien alle nuusbriewe</a>
           </div>
         </div>
       </section>
