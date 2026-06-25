@@ -1,11 +1,10 @@
-// Combined feed for Gereformeerde Kerk Gobabis
-// Paste this entire file into the Google Apps Script project.
-// Keep only one doGet(e) in the project.
-// Deploy as a web app, then use:
+// Gereformeerde Kerk Gobabis combined feed
+// Keep this as the only Apps Script file with doGet(e).
+// Web app routes:
 //   /exec?feed=youtube
 //   /exec?feed=newsletters
 //
-// Manual testing in Apps Script:
+// Manual testing:
 //   Run testYouTubeFeed_()
 //   Run testNewsletterFeed_()
 
@@ -14,98 +13,139 @@ const NEWSLETTER_FOLDER_ID = '15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl';
 const CACHE_SECONDS = 30 * 60;
 const MAX_YOUTUBE_RESULTS = 24;
 const MAX_NEWSLETTER_RESULTS = 50;
-const NEWSLETTER_ALLOWED_MIME_TYPES = [
-  MimeType.PDF,
-  MimeType.GOOGLE_DOCS,
-  MimeType.MICROSOFT_WORD,
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-];
 
 function doGet(e) {
-  const params = e && e.parameter ? e.parameter : {};
-  const feed = (params.feed || 'youtube').toLowerCase();
-  const output = feed === 'newsletters'
-    ? getNewsletterFeed_()
-    : getYouTubeFeed_();
+  const feed = String((e && e.parameter && e.parameter.feed) || 'youtube').toLowerCase();
+  const data = feed === 'newsletters' ? getNewsletterFeed_(false) : getYouTubeFeed_(false);
 
   return ContentService
-    .createTextOutput(JSON.stringify(output))
+    .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
 function testYouTubeFeed_() {
-  console.log(JSON.stringify(getYouTubeFeed_(), null, 2));
+  console.log(JSON.stringify(getYouTubeFeed_(true), null, 2));
 }
 
 function testNewsletterFeed_() {
   console.log(JSON.stringify(getNewsletterFeed_(true), null, 2));
 }
 
-function getYouTubeFeed_() {
-  const cache = CacheService.getScriptCache();
-  const cached = cache.get('youtube-feed');
-  if (cached) return JSON.parse(cached);
+function getYouTubeFeed_(skipCache) {
+  const cached = getCached_('youtube-feed', skipCache);
+  if (cached) return cached;
 
   const apiKey = PropertiesService.getScriptProperties().getProperty('YOUTUBE_API_KEY');
-  if (!apiKey) {
-    return {
-      updatedAt: new Date().toISOString(),
-      videos: [],
-      error: 'Missing YOUTUBE_API_KEY script property.'
-    };
-  }
+  if (!apiKey) return { updatedAt: now_(), videos: [], error: 'Missing YOUTUBE_API_KEY script property.' };
 
   const uploadsPlaylistId = getUploadsPlaylistId_(apiKey);
   const videos = getPlaylistVideos_(apiKey, uploadsPlaylistId);
 
   const output = {
-    updatedAt: new Date().toISOString(),
+    updatedAt: now_(),
     channelId: CHANNEL_ID,
     uploadsPlaylistId: uploadsPlaylistId,
+    count: videos.length,
     videos: videos
   };
 
-  cache.put('youtube-feed', JSON.stringify(output), CACHE_SECONDS);
+  putCached_('youtube-feed', output);
   return output;
 }
 
+function getNewsletterFeed_(skipCache) {
+  const cached = getCached_('newsletter-feed', skipCache);
+  if (cached) return cached;
+
+  const folder = DriveApp.getFolderById(NEWSLETTER_FOLDER_ID);
+  const files = folder.getFiles();
+  const items = [];
+  let scanned = 0;
+
+  while (files.hasNext()) {
+    const file = files.next();
+    scanned++;
+
+    const mimeType = file.getMimeType();
+    const name = file.getName();
+
+    if (!isNewsletterFile_(mimeType, name)) continue;
+    items.push(toNewsletterItem_(file));
+  }
+
+  items.sort(function(a, b) {
+    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+  });
+
+  const output = {
+    updatedAt: now_(),
+    folderId: NEWSLETTER_FOLDER_ID,
+    scanned: scanned,
+    count: items.length,
+    latest: items[0] || null,
+    items: items.slice(0, MAX_NEWSLETTER_RESULTS)
+  };
+
+  putCached_('newsletter-feed', output);
+  return output;
+}
+
+function isNewsletterFile_(mimeType, name) {
+  const lowerName = String(name || '').toLowerCase();
+  return mimeType === MimeType.PDF
+    || mimeType === MimeType.GOOGLE_DOCS
+    || lowerName.endsWith('.pdf');
+}
+
+function toNewsletterItem_(file) {
+  const id = file.getId();
+  const name = file.getName();
+  const mimeType = file.getMimeType();
+  const updated = file.getLastUpdated();
+  const isPdf = mimeType === MimeType.PDF || name.toLowerCase().endsWith('.pdf');
+
+  return {
+    id: id,
+    title: cleanTitle_(name),
+    fileName: name,
+    mimeType: mimeType,
+    date: Utilities.formatDate(updated, 'Africa/Johannesburg', 'yyyy-MM-dd'),
+    updatedAt: updated.toISOString(),
+    url: file.getUrl(),
+    viewerUrl: isPdf ? 'https://drive.google.com/file/d/' + id + '/preview' : file.getUrl()
+  };
+}
+
 function getUploadsPlaylistId_(apiKey) {
-  const url = 'https://www.googleapis.com/youtube/v3/channels'
+  const data = fetchJson_('https://www.googleapis.com/youtube/v3/channels'
     + '?part=contentDetails'
     + '&id=' + encodeURIComponent(CHANNEL_ID)
-    + '&key=' + encodeURIComponent(apiKey);
+    + '&key=' + encodeURIComponent(apiKey));
 
-  const data = fetchJson_(url);
-  const item = data.items && data.items[0];
-  if (!item) throw new Error('Could not find YouTube channel: ' + CHANNEL_ID);
-
-  return item.contentDetails.relatedPlaylists.uploads;
+  if (!data.items || !data.items[0]) throw new Error('Could not find YouTube channel: ' + CHANNEL_ID);
+  return data.items[0].contentDetails.relatedPlaylists.uploads;
 }
 
 function getPlaylistVideos_(apiKey, playlistId) {
-  const url = 'https://www.googleapis.com/youtube/v3/playlistItems'
+  const data = fetchJson_('https://www.googleapis.com/youtube/v3/playlistItems'
     + '?part=snippet,contentDetails'
     + '&maxResults=' + MAX_YOUTUBE_RESULTS
     + '&playlistId=' + encodeURIComponent(playlistId)
-    + '&key=' + encodeURIComponent(apiKey);
+    + '&key=' + encodeURIComponent(apiKey));
 
-  const data = fetchJson_(url);
-  const items = data.items || [];
-
-  return items
+  return (data.items || [])
     .map(function(item) {
       const snippet = item.snippet || {};
-      const resource = snippet.resourceId || {};
       const thumbnails = snippet.thumbnails || {};
-      const bestThumb = thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default || {};
-      const videoId = resource.videoId || item.contentDetails.videoId;
+      const thumb = thumbnails.maxres || thumbnails.high || thumbnails.medium || thumbnails.default || {};
+      const videoId = (snippet.resourceId && snippet.resourceId.videoId) || (item.contentDetails && item.contentDetails.videoId);
 
       return {
         videoId: videoId,
         title: snippet.title || 'Preek',
         description: snippet.description || '',
         publishedAt: snippet.publishedAt || '',
-        thumbnail: bestThumb.url || '',
+        thumbnail: thumb.url || '',
         url: 'https://www.youtube.com/watch?v=' + videoId
       };
     })
@@ -114,94 +154,32 @@ function getPlaylistVideos_(apiKey, playlistId) {
     });
 }
 
-function getNewsletterFeed_(skipCache) {
-  const cache = CacheService.getScriptCache();
-  const cached = cache.get('newsletter-feed');
-  if (!skipCache && cached) return JSON.parse(cached);
-
-  const rootFolder = DriveApp.getFolderById(NEWSLETTER_FOLDER_ID);
-  const newsletters = [];
-  collectNewsletterFiles_(rootFolder, newsletters, rootFolder.getName());
-
-  newsletters.sort(function(a, b) {
-    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-  });
-
-  const output = {
-    updatedAt: new Date().toISOString(),
-    folderId: NEWSLETTER_FOLDER_ID,
-    count: newsletters.length,
-    latest: newsletters[0] || null,
-    items: newsletters.slice(0, MAX_NEWSLETTER_RESULTS)
-  };
-
-  cache.put('newsletter-feed', JSON.stringify(output), CACHE_SECONDS);
-  return output;
+function fetchJson_(url) {
+  const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  const code = response.getResponseCode();
+  const text = response.getContentText();
+  if (code < 200 || code >= 300) throw new Error('API error ' + code + ': ' + text);
+  return JSON.parse(text);
 }
 
-function collectNewsletterFiles_(folder, newsletters, folderPath) {
-  const files = folder.getFiles();
-  while (files.hasNext()) {
-    const file = files.next();
-    const mimeType = file.getMimeType();
-    if (!isNewsletterFile_(mimeType, file.getName())) continue;
-    newsletters.push(toNewsletterItem_(file, folderPath));
-  }
-
-  const folders = folder.getFolders();
-  while (folders.hasNext()) {
-    const child = folders.next();
-    collectNewsletterFiles_(child, newsletters, folderPath + ' / ' + child.getName());
-  }
-}
-
-function isNewsletterFile_(mimeType, name) {
-  const lowerName = String(name || '').toLowerCase();
-  return NEWSLETTER_ALLOWED_MIME_TYPES.indexOf(mimeType) >= 0
-    || lowerName.endsWith('.pdf')
-    || lowerName.endsWith('.doc')
-    || lowerName.endsWith('.docx');
-}
-
-function toNewsletterItem_(file, folderPath) {
-  const id = file.getId();
-  const name = file.getName();
-  const updated = file.getLastUpdated();
-  const mimeType = file.getMimeType();
-  const isPreviewable = mimeType === MimeType.PDF || mimeType === MimeType.GOOGLE_DOCS;
-
-  return {
-    id: id,
-    title: cleanNewsletterTitle_(name),
-    fileName: name,
-    folderPath: folderPath,
-    mimeType: mimeType,
-    date: Utilities.formatDate(updated, 'Africa/Johannesburg', 'yyyy-MM-dd'),
-    updatedAt: updated.toISOString(),
-    url: file.getUrl(),
-    viewerUrl: isPreviewable
-      ? 'https://drive.google.com/file/d/' + id + '/preview'
-      : file.getUrl()
-  };
-}
-
-function cleanNewsletterTitle_(name) {
-  return name
+function cleanTitle_(name) {
+  return String(name || '')
     .replace(/\.pdf$/i, '')
-    .replace(/\.docx?$/i, '')
     .replace(/[_-]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
 
-function fetchJson_(url) {
-  const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
-  const code = response.getResponseCode();
-  const text = response.getContentText();
+function now_() {
+  return new Date().toISOString();
+}
 
-  if (code < 200 || code >= 300) {
-    throw new Error('YouTube API error ' + code + ': ' + text);
-  }
+function getCached_(key, skipCache) {
+  if (skipCache) return null;
+  const cached = CacheService.getScriptCache().get(key);
+  return cached ? JSON.parse(cached) : null;
+}
 
-  return JSON.parse(text);
+function putCached_(key, value) {
+  CacheService.getScriptCache().put(key, JSON.stringify(value), CACHE_SECONDS);
 }
