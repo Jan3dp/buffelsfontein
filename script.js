@@ -8,9 +8,13 @@ const requiredDefaults = {
   feeds: {
     youtube: "",
     newsletters: "",
+    leesstof: "",
   },
   newsletters: {
     folderOpen: "https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link",
+  },
+  leesstof: {
+    folderOpen: "https://drive.google.com/drive/folders/1BPUuMvxQSjrc_zviu24URLujCOZwCv2A?usp=sharing",
   },
 };
 
@@ -58,6 +62,15 @@ function showDataError() {
   alert.textContent = "Die site-data.json lêer kon nie gelaai word nie. Maak seker die JSON is geldig en in die repo beskikbaar.";
 
   document.querySelector("main")?.prepend(alert);
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function renderServices(services = []) {
@@ -111,10 +124,10 @@ function renderVideoPage(videos = []) {
   }
 
   list.innerHTML = videos.map((video) => `
-    <button class="video-list-button" type="button" data-video-id="${video.videoId}">
-      ${video.thumbnail ? `<img src="${video.thumbnail}" alt="" loading="lazy" />` : ""}
+    <button class="video-list-button" type="button" data-video-id="${escapeHtml(video.videoId)}">
+      ${video.thumbnail ? `<img src="${escapeHtml(video.thumbnail)}" alt="" loading="lazy" />` : ""}
       <span>${video.publishedAt ? new Date(video.publishedAt).toLocaleDateString("af-ZA") : "Video"}</span>
-      <strong>${video.title}</strong>
+      <strong>${escapeHtml(video.title)}</strong>
     </button>
   `).join("");
 
@@ -178,8 +191,8 @@ function renderNewsletterPage(feedData = {}) {
 
   list.innerHTML = items.map((item, index) => `
     <button class="newsletter-list-button" type="button" data-newsletter-index="${index}">
-      <span>${item.date || "Gemeentebrief"}</span>
-      <strong>${item.title}</strong>
+      <span>${escapeHtml(item.date || "Gemeentebrief")}</span>
+      <strong>${escapeHtml(item.title)}</strong>
     </button>
   `).join("");
 
@@ -200,6 +213,111 @@ function renderNewsletterPage(feedData = {}) {
     reader.style.display = "block";
     placeholder.style.display = "none";
   };
+}
+
+function getDriveViewerUrl(item) {
+  return item?.viewerUrl || item?.url || "";
+}
+
+function getLeesstofItems(categories = []) {
+  return categories.flatMap((category) =>
+    (category.items || []).map((item) => ({ ...item, category: category.title, categorySlug: category.slug }))
+  );
+}
+
+function renderLeesstofFeed(feedData = {}) {
+  setUpdated("leesstof-updated", feedData.updatedAt);
+
+  const categoryList = document.getElementById("leesstof-category-list");
+  const itemsContainer = document.getElementById("leesstof-items");
+  const summary = document.getElementById("leesstof-summary");
+  const search = document.getElementById("leesstof-search");
+  if (!categoryList || !itemsContainer) return;
+
+  const categories = (feedData.categories || []).filter((category) => category?.title);
+  const allItems = getLeesstofItems(categories);
+
+  if (summary) {
+    summary.textContent = categories.length
+      ? `${feedData.itemCount || allItems.length} stukke leesstof in ${categories.length} onderwerpe.`
+      : "Geen leesstof is tans beskikbaar nie.";
+  }
+
+  if (!categories.length) {
+    categoryList.innerHTML = `<p class="muted">Geen onderwerpe is tans beskikbaar nie.</p>`;
+    itemsContainer.innerHTML = `<p class="muted">Plaas PDF-, Word- of Google Docs-lêers in onderwerp-folders in Google Drive.</p>`;
+    return;
+  }
+
+  categoryList.innerHTML = `
+    <button class="category-pill is-active" type="button" data-category="all">Alle</button>
+    ${categories.map((category) => `
+      <button class="category-pill" type="button" data-category="${escapeHtml(category.slug)}">
+        ${escapeHtml(category.title)} <span>${category.count}</span>
+      </button>
+    `).join("")}
+  `;
+
+  let activeCategory = "all";
+
+  function renderItems() {
+    const query = String(search?.value || "").toLowerCase().trim();
+    const visibleCategories = categories
+      .map((category) => {
+        const items = (category.items || []).filter((item) => {
+          const haystack = `${item.title || ""} ${item.fileName || ""} ${category.title || ""}`.toLowerCase();
+          const matchesCategory = activeCategory === "all" || category.slug === activeCategory;
+          const matchesSearch = !query || haystack.includes(query);
+          return matchesCategory && matchesSearch;
+        });
+        return { ...category, items };
+      })
+      .filter((category) => category.items.length);
+
+    if (!visibleCategories.length) {
+      itemsContainer.innerHTML = `<p class="muted">Geen leesstof pas by jou soektog nie.</p>`;
+      return;
+    }
+
+    itemsContainer.innerHTML = visibleCategories.map((category) => `
+      <section class="leesstof-category" id="leesstof-${escapeHtml(category.slug)}">
+        <div class="leesstof-category-heading">
+          <h2>${escapeHtml(category.title)}</h2>
+          <span>${category.items.length}</span>
+        </div>
+        <div class="leesstof-card-grid">
+          ${category.items.map((item) => {
+            const viewerUrl = getDriveViewerUrl(item);
+            const openUrl = item.url || viewerUrl;
+            return `
+              <article class="leesstof-card">
+                <div>
+                  <span class="file-type">${escapeHtml(item.fileType || "Dokument")}</span>
+                  <h3>${escapeHtml(item.title || item.fileName || "Leesstof")}</h3>
+                  <p class="muted">Laas opgedateer: ${escapeHtml(item.date || "Onbekend")}</p>
+                </div>
+                <div class="hero-actions compact-actions">
+                  ${viewerUrl ? `<a class="button primary" href="${escapeHtml(viewerUrl)}" target="_blank" rel="noopener">Lees</a>` : ""}
+                  ${openUrl ? `<a class="button secondary" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">Drive</a>` : ""}
+                </div>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      </section>
+    `).join("");
+  }
+
+  categoryList.onclick = (event) => {
+    const button = event.target.closest("[data-category]");
+    if (!button) return;
+    activeCategory = button.dataset.category || "all";
+    categoryList.querySelectorAll(".category-pill").forEach((pill) => pill.classList.toggle("is-active", pill === button));
+    renderItems();
+  };
+
+  if (search) search.oninput = renderItems;
+  renderItems();
 }
 
 function getCachedFeed(cacheKey) {
@@ -260,6 +378,7 @@ function applySiteData(data) {
     links: { ...requiredDefaults.links, ...(data.links || {}) },
     feeds: { ...requiredDefaults.feeds, ...(data.feeds || {}) },
     newsletters: { ...requiredDefaults.newsletters, ...(data.newsletters || {}) },
+    leesstof: { ...requiredDefaults.leesstof, ...(data.leesstof || {}) },
   };
 
   setTextFields(config);
@@ -271,9 +390,11 @@ function applySiteData(data) {
   setLink("youtube-streams-link", config.links.youtubeStreams);
   setLink("maps-link", config.links.mapsOpen);
   setLink("newsletter-folder-link", config.newsletters.folderOpen);
+  setLink("leesstof-folder-link", config.leesstof.folderOpen);
 
   loadFeed(config.feeds.youtube, "gkg-youtube-feed", renderYouTubeFeed);
   loadFeed(config.feeds.newsletters, "gkg-newsletter-feed", renderNewsletterFeed);
+  loadFeed(config.feeds.leesstof, "gkg-leesstof-feed", renderLeesstofFeed);
 }
 
 async function setupData() {
