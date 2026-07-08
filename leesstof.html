@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="af">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Leesstof en Bybelstudiemateriaal van Gereformeerde Kerk Gobabis." />
+    <title>Leesstof | Gereformeerde Kerk Gobabis</title>
+    <link rel="icon" href="/buffelsfontein/favicon.svg?v=2" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/buffelsfontein/favicon.svg?v=2" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="extras.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Hoofnavigasie">
+        <a class="brand" href="index.html" aria-label="Gereformeerde Kerk Gobabis tuis">
+          <span class="brand-mark">GK</span>
+          <span>
+            <strong data-field="church.name">Gereformeerde Kerk Gobabis</strong>
+            <small data-field="church.location">Gobabis, Namibie</small>
+          </span>
+        </a>
+
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="nav-links">Menu</button>
+
+        <div class="nav-links" id="nav-links">
+          <a href="index.html">Tuis</a>
+          <a href="index.html#wie-ons-is">Wie is ons?</a>
+          <a href="preke.html">Preke</a>
+          <a href="nuusbriewe.html">Nuusbriewe</a>
+          <a href="leesstof.html">Leesstof</a>
+          <a href="index.html#kontak">Kontak</a>
+          <a href="index.html#kaart">Kaart</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="section compact-section">
+        <div class="section-heading">
+          <p class="eyebrow">Leesstof</p>
+          <h1 class="page-title">Bybelstudies en hulpmiddels</h1>
+          <p>Leesstof word outomaties uit Google Drive gelaai en volgens die onderwerp-folders gerangskik.</p>
+          <p class="feed-updated" id="leesstof-updated">Laas opgedateer: wag vir feed</p>
+          <a class="text-link" id="leesstof-folder-link" href="#" target="_blank" rel="noopener">Maak Google Drive folder oop</a>
+        </div>
+      </section>
+
+      <section class="section leesstof-layout" aria-label="Leesstof biblioteek">
+        <aside class="newsletter-sidebar leesstof-sidebar">
+          <p class="eyebrow">Onderwerpe</p>
+          <h2>Kategorieë</h2>
+          <p class="muted" id="leesstof-summary">Leesstof word gelaai.</p>
+          <div class="category-list" id="leesstof-category-list"></div>
+        </aside>
+
+        <div class="leesstof-main">
+          <label class="search-label" for="leesstof-search">Soek leesstof</label>
+          <input class="search-input" id="leesstof-search" type="search" placeholder="Soek volgens titel of onderwerp..." />
+          <div class="leesstof-items" id="leesstof-items">
+            <p class="muted">Leesstof word gelaai.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="footer-verse">Kolossense 3:14 — Bo dit alles moet julle mekaar liefhê. Dit is die band wat julle tot volmaakte eenheid saambind.</p>
+      <p>&copy; <span id="year"></span> <span data-field="church.name">Gereformeerde Kerk Gobabis</span>.</p>
+      <p>Soli Deo Gloria.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
