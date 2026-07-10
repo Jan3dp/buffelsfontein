@@ -41,25 +41,27 @@
         <div class="section-heading">
           <p class="eyebrow">Nuusbriewe</p>
           <h1 class="page-title">Gemeentebriewe en afkondigings</h1>
-          <p>Lees die nuutste en vorige gemeentebriewe. Die lys word outomaties uit die Google Drive feed opgebou.</p>
+          <p>Lees die nuutste en vorige gemeentebriewe. Kies ’n brief uit die argief om dit hier op die blad oop te maak.</p>
           <p class="feed-updated" id="newsletter-updated">Laas opgedateer: wag vir feed</p>
-          <a class="text-link" id="newsletter-folder-link" href="#" target="_blank" rel="noopener">Maak Google Drive folder oop</a>
         </div>
       </section>
 
       <section class="section newsletter-reader-layout" aria-label="Nuusbrief-leser">
         <aside class="newsletter-sidebar">
           <p class="eyebrow">Argief</p>
-          <h2>Kies 'n nuusbrief</h2>
+          <h2>Kies ’n nuusbrief</h2>
           <div class="newsletter-archive-list" id="newsletter-archive-list"></div>
         </aside>
 
-        <div class="embed-shell newsletter-reader-shell">
-          <iframe id="newsletter-reader-frame" title="Nuusbrief-leser" loading="lazy"></iframe>
-          <div class="placeholder" id="newsletter-reader-placeholder">
-            <h3>Geen nuusbrief gelaai nie</h3>
-            <p>Maak seker die Apps Script web app is gedeploy en dat die Drive folder dokumente bevat wat die script kan lees.</p>
+        <div class="newsletter-reader-main">
+          <div class="embed-shell newsletter-reader-shell">
+            <iframe id="newsletter-reader-frame" title="Nuusbrief-leser" loading="lazy"></iframe>
+            <div class="placeholder" id="newsletter-reader-placeholder">
+              <h3>Geen nuusbrief gelaai nie</h3>
+              <p>Maak seker die Apps Script web app is gedeploy en dat die Drive folder dokumente bevat wat die script kan lees.</p>
+            </div>
           </div>
+          <p class="drive-fallback">Sukkel die leser om te laai? <a id="newsletter-folder-link" href="#" target="_blank" rel="noopener">Maak die Google Drive bron oop</a>.</p>
         </div>
       </section>
     </main>
