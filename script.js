@@ -233,12 +233,12 @@ function renderLeesstofFeed(feedData = {}) {
   const search = document.getElementById("leesstof-search");
   if (!themeList || !itemsContainer) return;
 
-  const themes = (feedData.categories || []).filter((theme) => theme?.title);
+  const themes = (feedData.categories || []).filter((theme) => theme?.title && Number(theme.count || 0) > 0);
   const allItems = getLeesstofItems(themes);
 
   if (summary) {
     summary.textContent = themes.length
-      ? `${feedData.itemCount || allItems.length} stukke leesstof in ${themes.length} temas.`
+      ? `${allItems.length} stukke leesstof in ${themes.length} temas.`
       : "Geen leesstof is tans beskikbaar nie.";
   }
 
