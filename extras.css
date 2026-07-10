@@ -115,6 +115,133 @@
   font-size: 1.35rem;
 }
 
+.leesstof-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.33fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+  padding-top: 1rem;
+}
+
+.leesstof-sidebar {
+  position: sticky;
+  top: 6rem;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+
+.category-pill {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--brand);
+  cursor: pointer;
+  font-weight: 800;
+  padding: 0.55rem 0.85rem;
+}
+
+.category-pill span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-left: 0.25rem;
+}
+
+.category-pill.is-active,
+.category-pill:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: white;
+}
+
+.category-pill.is-active span,
+.category-pill:hover span {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.leesstof-main {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.search-label {
+  color: var(--brand-dark);
+  font-weight: 800;
+}
+
+.search-input {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--text);
+  font: inherit;
+  padding: 0.85rem 1rem;
+  width: 100%;
+}
+
+.leesstof-items {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.leesstof-category {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.leesstof-category-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.55rem;
+}
+
+.leesstof-category-heading h2 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brand-dark);
+  font-size: clamp(1.55rem, 3vw, 2.4rem);
+}
+
+.leesstof-category-heading span,
+.file-type {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.leesstof-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.leesstof-card {
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+  background: rgba(255, 250, 242, 0.88);
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.1rem;
+}
+
+.leesstof-card h3 {
+  margin: 0.35rem 0 0;
+  color: var(--brand-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
 .icon-button .social-icon-img {
   width: 1.35rem;
   height: 1.35rem;
@@ -123,7 +250,13 @@
 }
 
 @media (max-width: 900px) {
-  .home-grid {
+  .home-grid,
+  .leesstof-layout,
+  .leesstof-card-grid {
     grid-template-columns: 1fr;
+  }
+
+  .leesstof-sidebar {
+    position: static;
   }
 }
