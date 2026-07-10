@@ -16,7 +16,7 @@ This site is intentionally small and static:
 - no JavaScript framework
 - no backend/database in this repository
 - static church information in `site-data.json`
-- dynamic YouTube and newsletter feeds from Google Apps Script
+- dynamic YouTube, newsletter and leesstof feeds from Google Apps Script
 - browser-side feed cache in `localStorage` for faster repeat loads
 
 ## Main files
@@ -24,6 +24,7 @@ This site is intentionally small and static:
 - `index.html` - homepage
 - `preke.html` - sermons/video page
 - `nuusbriewe.html` - newsletter archive/reader page
+- `leesstof.html` - themed reading-material library page
 - `styles.css` - base layout and design
 - `extras.css` - compact homepage and small override styles
 - `script.js` - reads `site-data.json`, loads feeds, renders content, handles mobile menu
@@ -54,41 +55,24 @@ Use it for:
 - Google Maps link
 - Apps Script feed URLs
 - Google Drive newsletter folder open link
+- Google Drive leesstof folder open link
 
 Do not put API keys in this repository.
 
-Current `site-data.json` shape:
+Current feed fields:
 
 ```json
 {
-  "church": {
-    "name": "Gereformeerde Kerk Gobabis",
-    "shortName": "GK Gobabis",
-    "language": "Afrikaans",
-    "identity": "Gereformeerd",
-    "tagline": "'n Warm, gereformeerde gemeente waar ons saam onder God se Woord leef en Christus as Koning bely.",
-    "minister": "Ds. Chris Botha",
-    "location": "Gobabis, Namibie",
-    "phone": "+264 62 562 789",
-    "email": "gerfgbs@iway.na",
-    "address": "H.v. Kerk- en Quinto Cuanavalestraat, Gobabis"
-  },
-  "services": [
-    { "name": "Oggenddiens", "time": "09:00" },
-    { "name": "Aanddiens", "time": "18:00" }
-  ],
-  "links": {
-    "facebook": "https://www.facebook.com/gkgobabis/",
-    "googleBusiness": "https://share.google/ICmQsJ9kmqwWJQGmM",
-    "youtubeStreams": "https://www.youtube.com/@GKGobabis/streams",
-    "mapsOpen": "https://maps.app.goo.gl/xoGBmbYhC6gnPLHm9"
-  },
   "feeds": {
-    "youtube": "https://script.google.com/macros/s/AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ/exec?feed=youtube",
-    "newsletters": "https://script.google.com/macros/s/AKfycbyOIynQ98JQnm2b9MqDJ_8v-CG47EwdUxZKFHlOGMNaCrNyjSQJ_OIaK8qF2esK3yl6gQ/exec?feed=newsletters"
+    "youtube": "https://script.google.com/macros/s/.../exec?feed=youtube",
+    "newsletters": "https://script.google.com/macros/s/.../exec?feed=newsletters",
+    "leesstof": "https://script.google.com/macros/s/.../exec?feed=leesstof"
   },
   "newsletters": {
     "folderOpen": "https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link"
+  },
+  "leesstof": {
+    "folderOpen": "https://drive.google.com/drive/folders/1BPUuMvxQSjrc_zviu24URLujCOZwCv2A?usp=sharing"
   }
 }
 ```
@@ -101,7 +85,7 @@ The site loads the page first, then JavaScript loads data.
 
 1. Fetches `site-data.json`.
 2. Renders static details such as service times, contact details and links.
-3. Loads cached YouTube/newsletter JSON from browser `localStorage` immediately, if available.
+3. Loads cached YouTube/newsletter/leesstof JSON from browser `localStorage` immediately, if available.
 4. Refreshes each feed from Apps Script only if that cached copy is older than one hour.
 5. Saves successful feed responses back to `localStorage`.
 
@@ -117,7 +101,15 @@ Apps Script also has its own cache:
 const CACHE_SECONDS = 30 * 60;
 ```
 
-So a returning visitor should see cached content quickly, while background refreshes happen only occasionally.
+The HTML files reference CSS and JavaScript with cache-busting query strings, for example:
+
+```html
+<link rel="stylesheet" href="styles.css?v=5" />
+<link rel="stylesheet" href="extras.css?v=5" />
+<script src="script.js?v=5"></script>
+```
+
+Increase the version number after frontend CSS/JS changes if browsers keep showing stale files.
 
 ## Apps Script
 
@@ -131,11 +123,13 @@ Routes:
 
 - `/exec?feed=youtube`
 - `/exec?feed=newsletters`
+- `/exec?feed=leesstof`
 
 Manual test functions in Apps Script:
 
 - `testYouTubeFeed_()`
 - `testNewsletterFeed_()`
+- `testLeesstofFeed_()`
 
 ### Apps Script project
 
@@ -176,10 +170,6 @@ Google Cloud project:
 
 `buffelsfontein`
 
-Console link:
-
-`https://console.cloud.google.com/welcome?authuser=1&project=buffelsfontein`
-
 API used:
 
 `YouTube Data API v3`
@@ -198,14 +188,43 @@ Current Google Drive folder:
 
 `https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link`
 
-The Apps Script reads PDF and Google Docs files directly in that folder, sorts them by last updated date and returns:
+The Apps Script reads PDF, Google Docs and Word files directly in that folder, sorts them by last updated date and returns:
 
 - `updatedAt`
 - `count`
 - `latest`
 - `items[]`
 
+The website opens newsletters inside the `nuusbriewe.html` reader first. The Google Drive link is shown only as a small fallback under the reader.
+
 For visitors to preview/open files reliably, the folder/files should be shared as anyone with the link can view.
+
+## Leesstof
+
+Current Google Drive folder:
+
+`https://drive.google.com/drive/folders/1BPUuMvxQSjrc_zviu24URLujCOZwCv2A?usp=sharing`
+
+Drive structure:
+
+```text
+Leesstof
+├── Jona
+│   ├── dokument1.pdf
+│   └── dokument2.pdf
+├── Filippense
+│   └── dokument.pdf
+```
+
+The folder names become visible themes on `leesstof.html`. Files inside each theme folder become leesstof cards. Empty themes are hidden on the website.
+
+Supported first-pass file types:
+
+- PDF
+- Google Docs
+- Word documents
+
+For public preview/open links to work, the root folder, theme folders and files should be shared as anyone with the link can view.
 
 ## Maps
 
@@ -227,6 +246,8 @@ Completed housekeeping:
 - simplified social icons into small SVG files under `assets/`
 - added one-hour browser cache for feeds
 - updated favicon link with cache-busting query string
+- added cache-busting query strings for CSS and JavaScript
+- added a Drive-powered `leesstof.html` page using themes from Google Drive subfolders
 
 Potential future improvements:
 
