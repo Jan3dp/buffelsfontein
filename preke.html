@@ -8,8 +8,8 @@
     <title>Preke | Gereformeerde Kerk Gobabis</title>
     <link rel="icon" href="/buffelsfontein/favicon.svg?v=2" type="image/svg+xml" />
     <link rel="shortcut icon" href="/buffelsfontein/favicon.svg?v=2" type="image/svg+xml" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="extras.css" />
+    <link rel="stylesheet" href="styles.css?v=5" />
+    <link rel="stylesheet" href="extras.css?v=5" />
   </head>
   <body>
     <header class="site-header">
@@ -40,25 +40,27 @@
       <section class="section compact-section">
         <div class="section-heading">
           <p class="eyebrow">Preke en eredienste</p>
-          <h1 class="page-title">Video's en vorige uitsendings</h1>
-          <p>Die nuutste videos word outomaties uit die gemeente se YouTube-kanaal gelaai.</p>
+          <h1 class="page-title">Video’s en vorige uitsendings</h1>
+          <p>Die nuutste video’s word outomaties uit die gemeente se YouTube-kanaal gelaai. Kies ’n video uit die lys om dit hier op die blad te kyk.</p>
           <p class="feed-updated" id="youtube-updated">Laas opgedateer: wag vir feed</p>
-          <a class="text-link" id="youtube-streams-link" href="#" target="_blank" rel="noopener">Maak YouTube-kanaal oop</a>
         </div>
       </section>
 
       <section class="section video-page-layout" aria-label="Video-leser">
-        <div class="embed-shell video-shell video-page-player">
-          <iframe id="video-page-frame" title="Gekose preekvideo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
-          <div class="placeholder" id="video-page-placeholder">
-            <h3>Geen videos gelaai nie</h3>
-            <p>Maak seker die Apps Script web app is gedeploy en dat die YouTube feed beskikbaar is.</p>
+        <div class="video-reader-main">
+          <div class="embed-shell video-shell video-page-player">
+            <iframe id="video-page-frame" title="Gekose preekvideo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+            <div class="placeholder" id="video-page-placeholder">
+              <h3>Geen video gelaai nie</h3>
+              <p>Maak seker die Apps Script web app is gedeploy en dat die YouTube feed beskikbaar is.</p>
+            </div>
           </div>
+          <p class="drive-fallback">Sukkel die video om te laai? <a id="youtube-streams-link" href="#" target="_blank" rel="noopener">Maak die YouTube-kanaal oop</a>.</p>
         </div>
 
         <aside class="newsletter-sidebar video-sidebar">
-          <p class="eyebrow">Videos</p>
-          <h2>Kies 'n video</h2>
+          <p class="eyebrow">Video’s</p>
+          <h2>Kies ’n video</h2>
           <div class="video-list" id="video-list"></div>
         </aside>
       </section>
@@ -70,6 +72,6 @@
       <p>Soli Deo Gloria.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=5"></script>
   </body>
 </html>
