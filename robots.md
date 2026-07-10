@@ -17,10 +17,11 @@ This repo is a simple GitHub Pages site for Gereformeerde Kerk Gobabis.
 The site uses:
 
 - `site-data.json` for stable structured church data and links
-- `apps-script/combined-feed.gs` for YouTube and newsletter feeds
+- `apps-script/combined-feed.gs` for YouTube, newsletter and leesstof feeds
 - `script.js` for rendering, mobile menu and browser-side feed caching
 - `styles.css` for base layout
 - `extras.css` for compact homepage and small overrides
+- `leesstof.html` for the Drive-powered reading-material library
 
 There is no build step.
 
@@ -34,6 +35,7 @@ Use `site-data.json` for:
 - Maps/Facebook/Google/YouTube links
 - Apps Script feed URLs
 - Google Drive newsletter folder link
+- Google Drive leesstof folder link
 
 Do not create a second manual JSON manifest unless the user explicitly asks for that.
 
@@ -47,6 +49,7 @@ Routes:
 
 - `?feed=youtube`
 - `?feed=newsletters`
+- `?feed=leesstof`
 
 The frontend caches successful feed responses in browser `localStorage` for one hour.
 
@@ -112,6 +115,17 @@ Newsletter Drive folder:
 
 `https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link`
 
+Leesstof Drive folder:
+
+`https://drive.google.com/drive/folders/1BPUuMvxQSjrc_zviu24URLujCOZwCv2A?usp=sharing`
+
+## Current pages
+
+- `index.html` - homepage
+- `preke.html` - video reader and sermon archive
+- `nuusbriewe.html` - newsletter reader and archive
+- `leesstof.html` - reading material grouped by themes from Google Drive subfolders
+
 ## Things deliberately removed
 
 Do not casually re-add these old ideas:
@@ -123,7 +137,7 @@ Do not casually re-add these old ideas:
 - manual `newsletters.json`
 - old `googleDoc`, `youtubeEmbed`, `mapsEmbed`, `youtubeChannelId` and `folderId` fields in `site-data.json`
 
-The current direction is cleaner: static pages + two Apps Script JSON feeds.
+The current direction is cleaner: static pages + Apps Script JSON feeds.
 
 ## Editing guidance
 
@@ -132,7 +146,8 @@ The current direction is cleaner: static pages + two Apps Script JSON feeds.
 - Change base styling in `styles.css`.
 - Change homepage compact styling in `extras.css`.
 - Change page structure in the HTML files only when needed.
-- Keep repeated head/nav/footer markup manually aligned across `index.html`, `preke.html` and `nuusbriewe.html` unless a build step is deliberately introduced later.
+- Keep repeated head/nav/footer markup manually aligned across `index.html`, `preke.html`, `nuusbriewe.html` and `leesstof.html` unless a build step is deliberately introduced later.
+- Keep CSS and JavaScript cache-busting query strings aligned across the HTML files, for example `styles.css?v=5`, `extras.css?v=5` and `script.js?v=5`.
 
 ## Testing checklist
 
@@ -141,11 +156,13 @@ After edits, test:
 1. `https://jan3dp.github.io/buffelsfontein/`
 2. `preke.html`
 3. `nuusbriewe.html`
-4. mobile menu
-5. Facebook, Google profile and Maps links
-6. `?feed=youtube`
-7. `?feed=newsletters`
-8. favicon in a private/incognito window
+4. `leesstof.html`
+5. mobile menu
+6. Facebook, Google profile and Maps links
+7. `?feed=youtube`
+8. `?feed=newsletters`
+9. `?feed=leesstof`
+10. favicon in a private/incognito window
 
 ## Deployment
 
