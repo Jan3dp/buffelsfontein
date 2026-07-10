@@ -115,6 +115,12 @@
   font-size: 1.35rem;
 }
 
+.newsletter-reader-main,
+.leesstof-main {
+  display: grid;
+  gap: 1rem;
+}
+
 .leesstof-layout {
   display: grid;
   grid-template-columns: minmax(240px, 0.33fr) minmax(0, 1fr);
@@ -161,11 +167,6 @@
 .category-pill.is-active span,
 .category-pill:hover span {
   color: rgba(255, 255, 255, 0.78);
-}
-
-.leesstof-main {
-  display: grid;
-  gap: 1.25rem;
 }
 
 .search-label {
@@ -240,6 +241,25 @@
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.25rem;
   line-height: 1.2;
+}
+
+.drive-fallback {
+  color: var(--muted);
+  font-size: 0.86rem;
+  margin: 0.2rem 0 0;
+}
+
+.drive-fallback a,
+.drive-mini-link {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.drive-mini-link {
+  align-self: center;
 }
 
 .icon-button .social-icon-img {
