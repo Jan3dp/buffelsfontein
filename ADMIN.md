@@ -17,6 +17,7 @@ Use `site-data.json` for:
 - Google Maps open link
 - Apps Script feed URLs
 - Google Drive newsletter folder open link
+- Google Drive leesstof folder open link
 
 Do not keep a second manual JSON file in Google Drive. That creates double updates and confusion.
 
@@ -29,7 +30,7 @@ The homepage has hardcoded starter service times so something useful appears bef
 
 ## Dynamic feeds
 
-The site uses Google Apps Script for both dynamic feeds.
+The site uses Google Apps Script for three dynamic feeds.
 
 Current web app base URL:
 
@@ -39,6 +40,7 @@ Routes:
 
 - `?feed=youtube`
 - `?feed=newsletters`
+- `?feed=leesstof`
 
 The Apps Script source in this repo is:
 
@@ -62,12 +64,13 @@ Manual test functions:
 
 - `testYouTubeFeed_()`
 - `testNewsletterFeed_()`
+- `testLeesstofFeed_()`
 
 The YouTube API key must stay in Apps Script Script Properties as `YOUTUBE_API_KEY`. Do not commit the key to GitHub.
 
 ## Frontend cache
 
-`script.js` caches successful YouTube/newsletter feed responses in the visitor's browser `localStorage`.
+`script.js` caches successful YouTube/newsletter/leesstof feed responses in the visitor's browser `localStorage`.
 
 Current refresh interval:
 
@@ -77,13 +80,23 @@ That is one hour.
 
 A visitor may therefore see a cached feed for up to an hour before the frontend asks Apps Script again. This is intentional.
 
+The HTML files reference CSS and JavaScript with cache-busting query strings, for example:
+
+- `styles.css?v=5`
+- `extras.css?v=5`
+- `script.js?v=5`
+
+Increase the version number after frontend CSS/JS changes if browsers keep showing stale files.
+
 ## Newsletters
 
 Google Drive folder:
 
 `https://drive.google.com/drive/folders/15JL3P9Zzy0uiS6Skk__1yFooEcGAi5gl?usp=drive_link`
 
-The Apps Script reads PDF and Google Docs files directly in that folder. It does not currently recurse through subfolders.
+The Apps Script reads PDF, Google Docs and Word files directly in that folder. It does not recurse through newsletter subfolders.
+
+The website opens newsletters inside the `nuusbriewe.html` reader first. The Google Drive link is shown only as a small fallback under the reader.
 
 For public preview/open links to work, the folder/files should be shared as anyone with the link can view.
 
@@ -93,7 +106,43 @@ If newsletters do not show:
 - check `scanned`
 - check `count`
 - if `scanned` is 0, Apps Script sees no files in the configured folder
-- if `scanned` is greater than 0 but `count` is 0, the files are not currently recognised as PDF or Google Docs
+- if `scanned` is greater than 0 but `count` is 0, the files are not currently recognised as supported documents
+
+## Leesstof
+
+Google Drive folder:
+
+`https://drive.google.com/drive/folders/1BPUuMvxQSjrc_zviu24URLujCOZwCv2A?usp=sharing`
+
+Recommended Drive structure:
+
+```text
+Leesstof
+├── Jona
+│   ├── dokument1.pdf
+│   └── dokument2.pdf
+├── Filippense
+│   └── dokument.pdf
+```
+
+Each subfolder becomes a visible theme on `leesstof.html`. Files inside the subfolder become leesstof cards.
+
+Supported file types:
+
+- PDF
+- Google Docs
+- Word documents
+
+Empty theme folders are hidden by the frontend. For public preview/open links to work, the root folder, theme folders and files should be shared as anyone with the link can view.
+
+If leesstof does not show:
+
+- open the Apps Script URL with `?feed=leesstof`
+- check `categoryCount`
+- check `itemCount`
+- confirm the Drive folder has subfolders
+- confirm files are inside the subfolders, not only in the root folder
+- confirm files are shared for public viewing
 
 ## YouTube
 
@@ -151,7 +200,7 @@ Do not re-add these unless there is a clear reason.
 Start here:
 
 1. Open the live site in a private/incognito browser.
-2. Test the two Apps Script feed URLs directly.
+2. Test the three Apps Script feed URLs directly.
 3. Check `site-data.json` for service times and links.
 4. Check `apps-script/combined-feed.gs` against the live Apps Script project.
 5. Review the browser console only if visible content is not loading.
