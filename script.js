@@ -166,13 +166,12 @@ function renderLatestNewsletter(feedData = {}) {
 
   if (title && latest?.title) title.textContent = latest.title;
   if (date) date.textContent = latest?.date || "Nuutste";
-  if (description) description.textContent = latest ? "Maak die nuutste gemeentebrief oop." : "Geen nuusbriewe is tans beskikbaar nie.";
+  if (description) description.textContent = latest ? "Lees die nuutste gemeentebrief op die nuusbriewe-blad." : "Geen nuusbriewe is tans beskikbaar nie.";
 
-  const url = getNewsletterViewerUrl(latest);
-  if (link && url) {
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noopener";
+  if (link) {
+    link.href = "nuusbriewe.html";
+    link.removeAttribute("target");
+    link.removeAttribute("rel");
   }
 }
 
@@ -221,72 +220,72 @@ function getDriveViewerUrl(item) {
 
 function getLeesstofItems(categories = []) {
   return categories.flatMap((category) =>
-    (category.items || []).map((item) => ({ ...item, category: category.title, categorySlug: category.slug }))
+    (category.items || []).map((item) => ({ ...item, theme: category.title, themeSlug: category.slug }))
   );
 }
 
 function renderLeesstofFeed(feedData = {}) {
   setUpdated("leesstof-updated", feedData.updatedAt);
 
-  const categoryList = document.getElementById("leesstof-category-list");
+  const themeList = document.getElementById("leesstof-theme-list");
   const itemsContainer = document.getElementById("leesstof-items");
   const summary = document.getElementById("leesstof-summary");
   const search = document.getElementById("leesstof-search");
-  if (!categoryList || !itemsContainer) return;
+  if (!themeList || !itemsContainer) return;
 
-  const categories = (feedData.categories || []).filter((category) => category?.title);
-  const allItems = getLeesstofItems(categories);
+  const themes = (feedData.categories || []).filter((theme) => theme?.title);
+  const allItems = getLeesstofItems(themes);
 
   if (summary) {
-    summary.textContent = categories.length
-      ? `${feedData.itemCount || allItems.length} stukke leesstof in ${categories.length} onderwerpe.`
+    summary.textContent = themes.length
+      ? `${feedData.itemCount || allItems.length} stukke leesstof in ${themes.length} temas.`
       : "Geen leesstof is tans beskikbaar nie.";
   }
 
-  if (!categories.length) {
-    categoryList.innerHTML = `<p class="muted">Geen onderwerpe is tans beskikbaar nie.</p>`;
-    itemsContainer.innerHTML = `<p class="muted">Plaas PDF-, Word- of Google Docs-lêers in onderwerp-folders in Google Drive.</p>`;
+  if (!themes.length) {
+    themeList.innerHTML = `<p class="muted">Geen temas is tans beskikbaar nie.</p>`;
+    itemsContainer.innerHTML = `<p class="muted">Plaas PDF-, Word- of Google Docs-lêers in tema-vouers in Google Drive.</p>`;
     return;
   }
 
-  categoryList.innerHTML = `
-    <button class="category-pill is-active" type="button" data-category="all">Alle</button>
-    ${categories.map((category) => `
-      <button class="category-pill" type="button" data-category="${escapeHtml(category.slug)}">
-        ${escapeHtml(category.title)} <span>${category.count}</span>
+  themeList.innerHTML = `
+    <button class="category-pill is-active" type="button" data-theme="all">Alle</button>
+    ${themes.map((theme) => `
+      <button class="category-pill" type="button" data-theme="${escapeHtml(theme.slug)}">
+        ${escapeHtml(theme.title)} <span>${theme.count}</span>
       </button>
     `).join("")}
   `;
 
-  let activeCategory = "all";
+  let activeTheme = "all";
 
   function renderItems() {
     const query = String(search?.value || "").toLowerCase().trim();
-    const visibleCategories = categories
-      .map((category) => {
-        const items = (category.items || []).filter((item) => {
-          const haystack = `${item.title || ""} ${item.fileName || ""} ${category.title || ""}`.toLowerCase();
-          const matchesCategory = activeCategory === "all" || category.slug === activeCategory;
+    const visibleThemes = themes
+      .map((theme) => {
+        const items = (theme.items || []).filter((item) => {
+          const haystack = `${item.title || ""} ${item.fileName || ""} ${theme.title || ""}`.toLowerCase();
+          const matchesTheme = activeTheme === "all" || theme.slug === activeTheme;
           const matchesSearch = !query || haystack.includes(query);
-          return matchesCategory && matchesSearch;
+          return matchesTheme && matchesSearch;
         });
-        return { ...category, items };
+        return { ...theme, items };
       })
-      .filter((category) => category.items.length);
+      .filter((theme) => theme.items.length);
 
-    if (!visibleCategories.length) {
+    if (!visibleThemes.length) {
       itemsContainer.innerHTML = `<p class="muted">Geen leesstof pas by jou soektog nie.</p>`;
       return;
     }
 
-    itemsContainer.innerHTML = visibleCategories.map((category) => `
-      <section class="leesstof-category" id="leesstof-${escapeHtml(category.slug)}">
+    itemsContainer.innerHTML = visibleThemes.map((theme) => `
+      <section class="leesstof-category" id="leesstof-${escapeHtml(theme.slug)}">
         <div class="leesstof-category-heading">
-          <h2>${escapeHtml(category.title)}</h2>
-          <span>${category.items.length}</span>
+          <h2>${escapeHtml(theme.title)}</h2>
+          <span>${theme.items.length}</span>
         </div>
         <div class="leesstof-card-grid">
-          ${category.items.map((item) => {
+          ${theme.items.map((item) => {
             const viewerUrl = getDriveViewerUrl(item);
             const openUrl = item.url || viewerUrl;
             return `
@@ -298,7 +297,7 @@ function renderLeesstofFeed(feedData = {}) {
                 </div>
                 <div class="hero-actions compact-actions">
                   ${viewerUrl ? `<a class="button primary" href="${escapeHtml(viewerUrl)}" target="_blank" rel="noopener">Lees</a>` : ""}
-                  ${openUrl ? `<a class="button secondary" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">Drive</a>` : ""}
+                  ${openUrl ? `<a class="drive-mini-link" href="${escapeHtml(openUrl)}" target="_blank" rel="noopener">Maak in Drive oop</a>` : ""}
                 </div>
               </article>
             `;
@@ -308,11 +307,11 @@ function renderLeesstofFeed(feedData = {}) {
     `).join("");
   }
 
-  categoryList.onclick = (event) => {
-    const button = event.target.closest("[data-category]");
+  themeList.onclick = (event) => {
+    const button = event.target.closest("[data-theme]");
     if (!button) return;
-    activeCategory = button.dataset.category || "all";
-    categoryList.querySelectorAll(".category-pill").forEach((pill) => pill.classList.toggle("is-active", pill === button));
+    activeTheme = button.dataset.theme || "all";
+    themeList.querySelectorAll(".category-pill").forEach((pill) => pill.classList.toggle("is-active", pill === button));
     renderItems();
   };
 
